@@ -22,7 +22,7 @@ class Genre(models.Model):
 class Filme(models.Model):
     nome = models.CharField(max_length=100)
     genre = models.ForeignKey(Genre, models.SET_DEFAULT, default="None")
-    saga = models.ForeignKey(Saga, models.CASCADE,blank=True)
+    saga = models.ForeignKey(Saga, models.CASCADE,blank=True,null=True)
     duracao = models.IntegerField()
     imagem = models.CharField(max_length=200)#TODO Imagens como caminhos?
     data_publicacao = models.DateTimeField()
@@ -44,25 +44,20 @@ class Publicacao(models.Model):
         CINEMA = 'C' , _('Cinema')
 
     permissao = models.CharField(max_length=1,choices=Permissao.choices,default=Permissao.TODOS)
-    parent = models.ForeignKey('self', models.CASCADE,blank=True)
+    parent = models.ForeignKey('self', models.CASCADE,blank=True,null=True)
     data_publicacao = models.DateTimeField()
     texto = models.CharField(max_length=1000)#TODO Mayeb use models.TextField() instead
-    grupo = models.ForeignKey(Grupo, models.CASCADE,blank=True)
-    cinema = models.ForeignKey(Cinema, models.CASCADE,blank=True)
-    filme = models.ForeignKey(Filme, models.CASCADE,blank=True)
-    timestamp_inicio = models.IntegerField(blank=True)#TODO Consider using models.TimeField() instead
-    timestamp_fim = models.IntegerField(blank=True)#TODO Consider using models.TimeField() instead
+    grupo = models.ForeignKey(Grupo, models.CASCADE,blank=True,null=True)
+    cinema = models.ForeignKey(Cinema, models.CASCADE,blank=True,null=True)
+    filme = models.ForeignKey(Filme, models.CASCADE,blank=True,null=True)
+    timestamp_inicio = models.IntegerField(blank=True,null=True)#TODO Consider using models.TimeField() instead
+    timestamp_fim = models.IntegerField(blank=True,null=True)#TODO Consider using models.TimeField() instead
 
 class Mensagem(models.Model):
     sender = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)
     grupo = models.ForeignKey(Grupo, models.CASCADE)
     timestamp = models.DateTimeField()
 
-
-class UtilizadorCinema(models.Model):
-    utilizador = models.ForeignKey(Utilizador, models.CASCADE)
-    cinema = models.ForeignKey(Cinema, models.CASCADE)
-    pass
 
 class Evento(models.Model):
     nome = models.CharField(max_length=200)
@@ -84,8 +79,8 @@ class ListaFilmes(models.Model):
         FUTUROS = 'F' , _('Futuros')
 
     tipo = models.CharField(max_length=1,choices=Tipo.choices)
-    utilizador = models.ForeignKey(Utilizador, models.CASCADE, blank=True)#null=true
-    grupo = models.ForeignKey(Grupo, models.CASCADE,blank=True)
+    utilizador = models.ForeignKey(Utilizador, models.CASCADE, blank=True, null=True)#null=true?
+    grupo = models.ForeignKey(Grupo, models.CASCADE,blank=True, null=True)
 
 class ElementoLista(models.Model):
     lista = models.ForeignKey(ListaFilmes, models.CASCADE)
