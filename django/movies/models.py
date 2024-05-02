@@ -60,6 +60,7 @@ class Mensagem(models.Model):
     sender = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)
     grupo = models.ForeignKey(Grupo, models.CASCADE)
     timestamp = models.DateTimeField()
+    texto = models.CharField(max_length=1000)#TODO Mayeb use models.TextField() instead
 
 class Evento(models.Model):
     nome = models.CharField(max_length=200)

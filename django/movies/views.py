@@ -49,33 +49,67 @@ def databaseTest(request):
         output+= "<li>Imagem:" + grupo.imagem+"</li></ul></li>\n"
     output +="</ul></li>\n"
 
+    output += "<li>Publicacao<ul>\n"
+    for pub in Publicacao.objects.all():
+        output+= "<li> <ul> <li>Permissão:"+pub.permissao+"</li>\n"
+        output+= "<li>Parent:" + (str(pub.parent) if pub.parent else "Não definido") + "</li>\n"
+        output+= "<li>Data de publicação:" + str(pub.data_publicacao) + "</li>\n"
+        output+= "<li>Texto:" + pub.texto + "</li>\n"
+        output+= "<li>Grupo:" +  (pub.grupo.nome if pub.grupo else "Não definido") + "</li>\n"
+        output+= "<li>Cinema:" +  (pub.cinema.localizacao if pub.cinema else "Não definido") + "</li>\n"
+        output+= "<li>Filme:" +  (pub.filme.nome if pub.filme else "Não definido") + "</li>\n"
+        output+= "<li>Timestamp inicio:" + (str(pub.timestamp_inicio) if pub.timestamp_inicio else "Não definido")+"</li>\n"
+        output+= "<li>Timestamp fim:" + (str(pub.timestamp_fim) if pub.timestamp_fim else "Não definido")+"</li></ul></li>\n"
+    output +="</ul></li>\n"
 
-# class Publicacao(models.Model):
+    output += "<li>Mensagem<ul>\n"
+    for mensagem in Mensagem.objects.all():
+        output+= "<li> <ul> <li>Grupo:"+mensagem.grupo.nome+"</li>\n"
+        output+= "<li>Sender:" + (str(mensagem.sender.user.username) if mensagem.sender else "Não definido") + "</li>\n"
+        output+= "<li>Texto:" + mensagem.texto + "</li>\n"
+        output+= "<li>Timestamp:" + (str(mensagem.timestamp) if mensagem.timestamp else "Não definido")+"</li></ul></li>\n"
+    output +="</ul></li>\n"
 
-#     class Permissao(models.TextChoices):
-#         TODOS = 'T' , _('Todos')
-#         Grupo = 'G' , _('Grupo')
-#         CINEMA = 'C' , _('Cinema')
+    output += "<li>Evento<ul>\n"
+    for evento in Evento.objects.all():
+        output+= "<li> <ul> <li>Nome:"+evento.nome+"</li>\n"
+        output+= "<li>Grupo:" + evento.grupo.nome+"</li></ul></li>\n"
+    output +="</ul></li>\n"
 
-#     permissao = models.CharField(max_length=1,choices=Permissao.choices,default=Permissao.TODOS)
-#     parent = models.ForeignKey('self', models.SET_NULL,blank=True,null=True)
-#     data_publicacao = models.DateTimeField()
-#     texto = models.CharField(max_length=1000)#TODO Mayeb use models.TextField() instead
-#     grupo = models.ForeignKey(Grupo, models.CASCADE,blank=True,null=True)
-#     cinema = models.ForeignKey(Cinema, models.CASCADE,blank=True,null=True)
-#     filme = models.ForeignKey(Filme, models.CASCADE,blank=True,null=True)
-#     timestamp_inicio = models.TimeField(blank=True,null=True)#TODO Consider using models.IntegerField() instead
-#     timestamp_fim = models.TimeField(blank=True,null=True)#TODO Consider using models.IntegerField() instead
 
-# class Mensagem(models.Model):
-#     sender = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)
+# class EscolhaFilme(models.Model):
+#     sessao = models.DateTimeField()
+#     filme = models.ForeignKey(Filme, models.CASCADE)
+#     evento = models.ForeignKey(Evento, models.CASCADE)
+
+# class Voto(models.Model):
+#     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
+#     voto = models.ForeignKey(EscolhaFilme, models.CASCADE)
+
+# class ListaFilmes(models.Model):
+
+#     class Tipo(models.TextChoices):
+#         VISTOS = 'V' , _('Vistos')
+#         FUTUROS = 'F' , _('Futuros')
+
+#     tipo = models.CharField(max_length=1,choices=Tipo.choices)
+#     utilizador = models.ForeignKey(Utilizador, models.CASCADE, blank=True, null=True)#null=true?
+#     grupo = models.ForeignKey(Grupo, models.CASCADE,blank=True, null=True)
+
+# class ElementoLista(models.Model):
+#     lista = models.ForeignKey(ListaFilmes, models.CASCADE)
+#     filme = models.ForeignKey(Filme, models.CASCADE)
+
+# class UtilizadorGrupo(models.Model):
+#     utilizador = models.ForeignKey(Utilizador, models.CASCADE)#TODO Mudar para restrict
 #     grupo = models.ForeignKey(Grupo, models.CASCADE)
-#     timestamp = models.DateTimeField()
+#     administrador = models.BooleanField(default=False)#TODO Check default
+#     convite_por_aceitar = models.BooleanField(default=True)
+#     date_joined = models.DateTimeField()#Para eleger o proximo admin em caso de saida.
 
-# class Evento(models.Model):
-#     nome = models.CharField(max_length=200)
-#     grupo = models.ForeignKey(Grupo, models.CASCADE)
-
+# class UtilizadorCinema(models.Model):
+#     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
+#     cinema = models.ForeignKey(Cinema,models.CASCADE)
 
     output += "</ul>\n"
     return HttpResponse(output)
