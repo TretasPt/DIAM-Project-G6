@@ -44,10 +44,10 @@ INSTALLED_APPS = [
     #Allow models to be used in app movies
     'movies.apps.MoviesConfig',
 
-    #TODO FUTURE: Will be used to connect with react
-    # 'rest_framework',
-    # 'corsheaders',
-    # 'rest_framework.authtoken',
+    #Used to connect with react
+    'rest_framework',
+    'corsheaders',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -59,8 +59,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    #TODO FUTURE: Will be used to connect with react
-    # 'corsheaders.middleware.CorsMiddleware',
+    #Used to connect with react
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'Grupo6_Movies.urls'
@@ -142,5 +142,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # MEDIA_URL = '/votacao/static/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR,'votacao/static/media')
 
-#TODO FUTURE: Will be used for react connection.
-# CORS_ALLOW_ALL_ORIGINS = True
+#Used for react connection.
+CORS_ALLOW_ALL_ORIGINS = True
