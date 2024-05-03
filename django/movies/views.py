@@ -76,40 +76,47 @@ def databaseTest(request):
         output+= "<li>Grupo:" + evento.grupo.nome+"</li></ul></li>\n"
     output +="</ul></li>\n"
 
+    output += "<li>EscolhaFilme<ul>\n"
+    for escolhaFilme in EscolhaFilme.objects.all():
+        output+= "<li> <ul> <li>Sessão:"+str(escolhaFilme.sessao)+"</li>\n"
+        output+= "<li>Filme:" + escolhaFilme.filme.nome + "</li>\n"
+        output+= "<li>Evento:" + escolhaFilme.evento.nome+"</li></ul></li>\n"
+    output +="</ul></li>\n"
 
-# class EscolhaFilme(models.Model):
-#     sessao = models.DateTimeField()
-#     filme = models.ForeignKey(Filme, models.CASCADE)
-#     evento = models.ForeignKey(Evento, models.CASCADE)
+    output += "<li>Voto<ul>\n"
+    for voto in Voto.objects.all():
+        output+= "<li> <ul> <li>Utilizador:"+voto.utilizador.user.username+"</li>\n"
+        output+= "<li>Voto:" + voto.voto.filme.nome +"|"  +str(voto.voto.sessao) + "|" + voto.voto.evento.nome+"</li></ul></li>\n"
+    output +="</ul></li>\n"
 
-# class Voto(models.Model):
-#     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
-#     voto = models.ForeignKey(EscolhaFilme, models.CASCADE)
+    output += "<li>ListaFilmes<ul>\n"
+    for lista in ListaFilmes.objects.all():
+        output+= "<li> <ul> <li>Tipo:"+lista.tipo+"</li>\n"
+        output+= "<li>Utilizador:" + (str(lista.utilizador.user.username) if lista.utilizador else "Não definido") + "</li>\n"
+        output+= "<li>Grupo:" + (str(lista.grupo.nome) if lista.grupo else "Não definido")+"</li></ul></li>\n"
+    output +="</ul></li>\n"
 
-# class ListaFilmes(models.Model):
+    output += "<li>ElementoLista<ul>\n"
+    for elemento in ElementoLista.objects.all():
+        output+= "<li> <ul> <li>Filme:"+elemento.filme.nome+"</li>\n"
+        output+= "<li>Lista:" + elemento.lista.tipo + "|" + (str(elemento.lista.utilizador.user.username) if elemento.lista.utilizador else elemento.lista.grupo.nome) +"</li></ul></li>\n"
+    output +="</ul></li>\n"
 
-#     class Tipo(models.TextChoices):
-#         VISTOS = 'V' , _('Vistos')
-#         FUTUROS = 'F' , _('Futuros')
+    output += "<li>UtilizadorGrupo<ul>\n"
+    for ug in UtilizadorGrupo.objects.all():
+        output+= "<li> <ul> <li>Administrador:"+ str(ug.administrador) +"</li>\n"
+        output+= "<li>Convite por aceitar:" + str(ug.convite_por_aceitar) + "</li>\n"
+        output+= "<li>Data de adesão:" + str(ug.date_joined) + "</li>\n"
+        output+= "<li>Utilizador:" + ug.utilizador.user.username + "</li>\n"
+        output+= "<li>Grupo:" + ug.grupo.nome +"</li></ul></li>\n"
+    output +="</ul></li>\n"
 
-#     tipo = models.CharField(max_length=1,choices=Tipo.choices)
-#     utilizador = models.ForeignKey(Utilizador, models.CASCADE, blank=True, null=True)#null=true?
-#     grupo = models.ForeignKey(Grupo, models.CASCADE,blank=True, null=True)
+    output += "<li>UtilizadorCinema<ul>\n"
+    for uc in UtilizadorCinema.objects.all():
+        output+= "<li> <ul> <li>Utilizador:"+ uc.utilizador.user.username +"</li>\n"
+        output+= "<li>Cinema:" + uc.cinema.localizacao +"</li></ul></li>\n"
+    output +="</ul></li>\n"
 
-# class ElementoLista(models.Model):
-#     lista = models.ForeignKey(ListaFilmes, models.CASCADE)
-#     filme = models.ForeignKey(Filme, models.CASCADE)
-
-# class UtilizadorGrupo(models.Model):
-#     utilizador = models.ForeignKey(Utilizador, models.CASCADE)#TODO Mudar para restrict
-#     grupo = models.ForeignKey(Grupo, models.CASCADE)
-#     administrador = models.BooleanField(default=False)#TODO Check default
-#     convite_por_aceitar = models.BooleanField(default=True)
-#     date_joined = models.DateTimeField()#Para eleger o proximo admin em caso de saida.
-
-# class UtilizadorCinema(models.Model):
-#     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
-#     cinema = models.ForeignKey(Cinema,models.CASCADE)
 
     output += "</ul>\n"
     return HttpResponse(output)
