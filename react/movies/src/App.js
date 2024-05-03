@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
+import {BACKEND_PATH} from './constants'
+import DjangoBridge from './autentication';
 
 function App() {
   return (
@@ -9,6 +11,11 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
+        <a href={BACKEND_PATH+"movies"}>
+          {BACKEND_PATH}movies
+
+        </a>
+
         <a
           className="App-link"
           href="https://reactjs.org"
@@ -17,6 +24,7 @@ function App() {
         >
           Learn React
         </a>
+        <DjangoBridge/>
       </header>
     </div>
   );
