@@ -1,0 +1,175 @@
+body {
+    background-color: #8a334a;
+    height: 100vh;
+}
+
+header {
+    padding: 20px;
+}
+
+main {
+    height:98vh;
+    background-color: gainsboro;
+    scrollbar-color: #8a334a gainsboro;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.wipe {
+    height: 90%;
+    display: block;
+    margin: auto;
+    overflow: hidden;
+}
+
+.scrollbox {
+    height: calc(100% - 40px);
+    margin-top: 20px;
+    overflow: auto;
+}
+
+.postbox {
+    height: 300px;
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #d1d1d1;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.posttopic {
+    width: 25%;
+    background-color: #8a334a;
+}
+
+.postcontent {
+    flex: 1;
+    margin-right: 0;
+    padding: 20px;
+    line-height: 30px;
+    text-align: justify;
+}
+
+.navbutton {
+    background-color: gainsboro;
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    transition: 0.2s;
+    width: 70%;
+    margin: 2vh auto 1vh auto;
+    width: 40px;
+    height: 40px;
+}
+
+.navbutton:hover {
+    background-color: grey;
+    width: 45px;
+    height: 45px;
+}
+
+.personalpanel {
+    height: 98vh;
+    background-color: #8a334a;
+    display: flex;
+    flex-direction: column;
+}
+
+.socialpanel {
+    height: 98vh;
+    background-color: #8a334a;
+    display: flex;
+    flex-direction: column;
+}
+
+.socialbox {
+    background-color: gainsboro;
+    border-radius: 5px;
+    display: block;
+    width: 85%;
+    float: left;
+    margin-left: 5%;
+    margin-bottom: 2vh;
+    overflow: hidden;
+}
+
+.groupbox {
+    height: 3vh;
+    transition: 0.5s;
+}
+
+.groupbox:hover {
+    height: 30vh
+}
+
+.scroll {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    text-align: justify;
+    scrollbar-color: #8a334a gainsboro;
+}
+
+#fixedcontent {
+    position: fixed;
+    display: grid;
+    grid-template-columns: 7vw 63vw 30vw;
+}
+
+#profileimgcropper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: 0.2s;
+    overflow: hidden;
+}
+
+#profileimgcropper:hover {
+    width: 60px;
+    height: 60px;
+}
+
+#profileimg {
+    width: inherit;
+}
+
+#username {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 1vw;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+#dontknowbox {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+#settings {
+    margin-top: auto;
+    margin-bottom: 0;
+    background-color: inherit;
+}
+
+#settings:hover {
+    transform: rotate(45deg);
+    width: 40px;
+    height: 40px;
+}
+
+#settingsimg {
+    width: inherit;
+}
