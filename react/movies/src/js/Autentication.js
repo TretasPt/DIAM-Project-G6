@@ -18,7 +18,7 @@ function Autentication() {
         setMsg("Loading...")
         setError("")
         try {
-            const response = await fetch(BACKEND_PATH + 'movies/external/login/', {
+            const response = await fetch(BACKEND_PATH + 'login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -5,8 +5,8 @@ import "../css/Feature.css"
 function Feature() {
     return (
         <div className="Feature-Container" >
-            <a href={BACKEND_PATH + "movies"}>
-                {BACKEND_PATH}movies
+            <a href={BACKEND_PATH.replace("/api","")}>
+                Django app
 
             </a>
         </div>

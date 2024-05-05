@@ -5,6 +5,11 @@ from django.shortcuts import render
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+from .serializers import *
+
 # Create your views here.
 def index(request):
     return HttpResponse("Pagina de entrada da app votacao.")
@@ -124,13 +129,118 @@ def databaseTest(request):
     output += "</ul>\n"
     return HttpResponse(output)
 
-class LoginView(APIView):
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-        user = authenticate(username=username, password=password)
-        if user:
-            token, _ = Token.objects.get_or_create(user=user)
-            return JsonResponse({'token': token.key})
-        else:
-            return JsonResponse({'error': 'Credenciais inválidas'}, status=400)
+# class LoginView(APIView):
+#     def post(self, request):
+#         username = request.data.get('username')
+#         password = request.data.get('password')
+#         user = authenticate(username=username, password=password)
+#         if user:
+#             token, _ = Token.objects.get_or_create(user=user)
+#             return JsonResponse({'token': token.key})
+#         else:
+#             return JsonResponse({'error': 'Credenciais inválidas'}, status=400)
+
+@api_view(['POST'])
+def login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    user = authenticate(username=username, password=password)
+    if user:
+        token, _ = Token.objects.get_or_create(user=user)
+        return JsonResponse({'token': token.key})
+    else:
+        return JsonResponse({'error': 'Credenciais inválidas'}, status=400)
+
+
+
+
+@api_view(['POST'])
+def grupos(request):
+    username = request.data.get('username')
+    token = request.data.get("token")
+    if(username==None or token==None):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    print(str(username) + "|" + str(token) + "|" + str((username != None) and (token != None)))
+    try:
+        user = Utilizador.objects.get(user__username=username)
+    except Utilizador.DoesNotExist:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    print(user.user.username)
+
+    groups_of_user = UtilizadorGrupo.objects.filter(convite_por_aceitar=False,utilizador=user).values("grupo")
+    print(groups_of_user)
+    groups = Grupo.objects.filter(id__in=groups_of_user)
+    print(groups)
+    serializer = GrupoSerializer(groups,many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def eventos(request):
+    username = request.data.get('username')
+    token = request.data.get("token")
+    grupo = request.data.get("grupo")
+    if(username==None or token==None or grupo == None):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    print(grupo)
+    eventos = Evento.objects.filter(grupo__id=grupo)
+    print(eventos)
+    serializer = EventoSerializer(eventos,many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def escolhas(request):
+    username = request.data.get('username')
+    token = request.data.get("token")
+    evento = request.data.get("evento")
+    if(username==None or token==None or evento == None):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        user = Utilizador.objects.get(user__username=username)
+    except Utilizador.DoesNotExist:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    escolhas = EscolhaFilme.objects.filter(evento__id=evento)
+    serializer = EscolhaFilmeSerializer(escolhas,many=True)
+
+    def addFields(ef):
+        filme = FilmeSerializer(Filme.objects.get(id=ef['filme'])).data
+        filme['genre']= Genre.objects.get(id=filme['genre']).nome#TODO handle movies without genre
+        filme['saga']= Saga.objects.get(id=filme['saga']).nome#TODO handle movies without saga
+        ef['filme'] = filme
+        votos = Voto.objects.filter(voto=ef['pk'])
+        count = len(votos)
+        user_voted = len(votos.filter(utilizador=user)) >0
+        ef['votos'] = {'count':count,'user_voted':user_voted}
+        return ef
+    res = list(map(addFields, serializer.data))
+    # return Response(serializer.data)
+    return Response(res)
+
+@api_view(['POST'])
+def voto(request):
+    username = request.data.get('username')
+    token = request.data.get("token")
+    voto = request.data.get('voto')#Um id para um EscolhaFilme
+    if(username==None or token==None or voto==None):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        user = Utilizador.objects.get(user__username=username)
+    except Utilizador.DoesNotExist:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    print(voto)
+    escolha_filme = EscolhaFilme.objects.get(id=voto)
+    print(escolha_filme)
+    print(user.user.username)
+    temp_voto=Voto.objects.filter(utilizador=user,voto=escolha_filme)
+    print("Len:" + str(len(temp_voto)))
+    if(len(temp_voto)==0):
+        #create
+        new_voto = Voto(utilizador=user,voto=escolha_filme)
+        new_voto.save()
+        return Response(status=status.HTTP_201_CREATED)
+    else:
+        #delete
+        temp_voto[0].delete()
+        return Response(status=status.HTTP_202_ACCEPTED)
