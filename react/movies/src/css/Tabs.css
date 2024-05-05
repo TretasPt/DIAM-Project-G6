@@ -1,0 +1,24 @@
+.TabHeaderDiv{
+    border-style: solid;
+    border-top-right-radius: 10%;
+    border-top-left-radius: 10%;
+    border-bottom-style: none;
+    padding: 10%;
+    margin-bottom: -15%;
+
+}
+
+.TabBodyDiv{
+    border-left-style: solid;
+    border-right-style: solid;
+    border-top-style: dashed;
+    border-bottom-style: none;
+    padding: 30%;
+    margin-bottom: -15%;
+/* }
+
+.TabLast{ */
+    border-bottom-style: solid;
+    border-bottom-right-radius: 10%;
+    border-bottom-left-radius: 10%;
+}

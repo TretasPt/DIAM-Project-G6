@@ -1,4 +1,9 @@
 .Feature-Container {
-    padding: 10%;
-    text-align: center;
-  }
+  padding: 10%;
+  text-align: center;
+  border-color: cadetblue;
+  border-width: 2px;
+  border-style: dashed;
+  border-radius: 5%;
+  margin: 5%;
+}

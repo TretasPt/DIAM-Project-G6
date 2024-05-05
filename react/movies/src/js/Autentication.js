@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { BACKEND_PATH } from './constants'
+import axios from "axios"
 
 
-function Autentication() {
-    const [username, setUsername] = useState('');
+function Autentication({username,setUsername,isAutenticated, setIsAutenticated}) {
     const [password, setPassword] = useState('');
     const [msg, setMsg] = useState('');
     const [error, setError] = useState('');
-    const [isAutenticated, setIsAutenticated] = useState(false);
 
     const handleLogout = () => {
         setIsAutenticated(false)
