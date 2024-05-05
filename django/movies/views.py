@@ -159,12 +159,12 @@ def grupos(request):
     username = request.data.get('username')
     token = request.data.get("token")
     if(username==None or token==None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error':"Not enough arguments passed. Expected username and token."},status=status.HTTP_400_BAD_REQUEST)
     print(str(username) + "|" + str(token) + "|" + str((username != None) and (token != None)))
     try:
         user = Utilizador.objects.get(user__username=username)
     except Utilizador.DoesNotExist:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error':"Couldn't find user."},status=status.HTTP_400_BAD_REQUEST)
     print(user.user.username)
 
     groups_of_user = UtilizadorGrupo.objects.filter(convite_por_aceitar=False,utilizador=user).values("grupo")
@@ -180,7 +180,7 @@ def eventos(request):
     token = request.data.get("token")
     grupo = request.data.get("grupo")
     if(username==None or token==None or grupo == None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error':"Not enough arguments passed. Expected username,token and grupo."},status=status.HTTP_400_BAD_REQUEST)
     print(grupo)
     eventos = Evento.objects.filter(grupo__id=grupo)
     print(eventos)
@@ -193,12 +193,12 @@ def escolhas(request):
     token = request.data.get("token")
     evento = request.data.get("evento")
     if(username==None or token==None or evento == None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error':"Not enough arguments passed. Expected username,token and evento."},status=status.HTTP_400_BAD_REQUEST)
     
     try:
         user = Utilizador.objects.get(user__username=username)
     except Utilizador.DoesNotExist:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error':"Couldn't find user."},status=status.HTTP_400_BAD_REQUEST)
 
     escolhas = EscolhaFilme.objects.filter(evento__id=evento)
     serializer = EscolhaFilmeSerializer(escolhas,many=True)
@@ -217,30 +217,35 @@ def escolhas(request):
     # return Response(serializer.data)
     return Response(res)
 
-@api_view(['POST'])
+@api_view(['POST','DELETE'])
 def voto(request):
     username = request.data.get('username')
     token = request.data.get("token")
     voto = request.data.get('voto')#Um id para um EscolhaFilme
     if(username==None or token==None or voto==None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error':"Not enough arguments passed. Expected username,token and voto."},status=status.HTTP_400_BAD_REQUEST)
 
     try:
         user = Utilizador.objects.get(user__username=username)
     except Utilizador.DoesNotExist:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-    print(voto)
+        return Response({'error':"Couldn't find user."},status=status.HTTP_400_BAD_REQUEST)
+
     escolha_filme = EscolhaFilme.objects.get(id=voto)
-    print(escolha_filme)
-    print(user.user.username)
     temp_voto=Voto.objects.filter(utilizador=user,voto=escolha_filme)
-    print("Len:" + str(len(temp_voto)))
-    if(len(temp_voto)==0):
+
+    if request.method=='POST':
+        if(len(temp_voto)!=0):
+            return Response({'error':"Can't create more vote. User already has a vote on this."},status=status.HTTP_400_BAD_REQUEST)
         #create
         new_voto = Voto(utilizador=user,voto=escolha_filme)
         new_voto.save()
         return Response(status=status.HTTP_201_CREATED)
-    else:
+    elif request.method=='DELETE':
+        if(len(temp_voto)==0):
+            return Response({'error':"Can't delete vote. No vote bellonging to current user."},status=status.HTTP_400_BAD_REQUEST)
         #delete
         temp_voto[0].delete()
         return Response(status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response({'error':'Invalid request method. Methods allowed:POST,DELETE'},status=status.HTTP_400_BAD_REQUEST)
+
