@@ -1,0 +1,25 @@
+{% extends 'movies/base.html' %}
+
+{% block main %}
+    <form id="#loginform" method="post" action="{% url 'movies:doRegister' %}">
+        <section class="formfield">
+            <label for="LoginUsername">Username:</label>
+            <input id="LoginUsername" type="text" name="username" required/>
+        </section>
+        <section class="formfield">
+            <label for="LoginEmail">Email:</label>
+            <input id="LoginEmail" type="email" name="emai" required/>
+        </section>
+        <section class="formfield">
+            <label for="LoginPassword">Password:</label>
+            <input id="LoginPassword" type="password" name="password" required/>
+        </section>
+        <section class="formfield">
+            <label  for="LoginPasswordConfirm">Confirm Password:</label>
+            <input id="LoginPasswordConfirm" type="password" name="passwordConfirm" required/>
+        </section>
+        <input type="submit" value="Registar">
+    </form>
+{% endblock %}
+
+{% block aside %}{% endblock %}

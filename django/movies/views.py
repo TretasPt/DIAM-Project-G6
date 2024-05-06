@@ -11,6 +11,9 @@ def index(request):
     }
     return render(request, 'movies/index.html', context)
 
+def login(request):
+    return render(request, 'movies/login.html')
+
 def databaseTest(request):
     output = "<h1>DATABASE DUMP</h1>\n<ul>\n"
 

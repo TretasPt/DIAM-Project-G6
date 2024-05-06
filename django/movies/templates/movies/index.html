@@ -1,3 +1,24 @@
 {% extends 'movies/base.html' %}
 
+{% block main %}
+    <section class="scrollbox">
+        {% if publicacoes_list %}
+            {% for publicacao in publicacoes_list %}
+                <section class="postbox">
+                    <section class="posttopic">
+                        .
+                        <section class="posttopicimage"></section>
+                        <section class="posttopictitle"></section>
+                    </section>
+                    <section class="postcontent">
+                        <section class="posttext">
+                            {{ publicacao.texto }}
+                        </section>
+                    </section>
+                </section>
+            {% endfor %}
+        {% endif %}
+    </section>
+{% endblock %}
+
 {% block noaside %}{% endblock %}
