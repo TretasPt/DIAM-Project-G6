@@ -22,10 +22,10 @@ function GroupTab({ tab, setTab, username, setGroup }) {
             setGroup(pk)
         }
         return (
-            <div>
-                <h5>Nome: {nome}</h5>
-                <h5>Criado: {data_criacao}</h5>
-                <img src={imagem} alt='Sem imagem' width={"80%"}  />
+            <div className='TabElement'>
+                <strong>Nome: </strong>{nome}
+                <img src={imagem} alt='Sem imagem' />
+                <strong>Criado: </strong>{data_criacao}
                 <button onClick={onClick}>Selecionar</button>
             </div>
         )
@@ -34,12 +34,12 @@ function GroupTab({ tab, setTab, username, setGroup }) {
     useEffect(() => { getGroupList() }, [username,tab])
 
     return (
-        <div className='TabElement'>
+        <div>
             <TabHeader tabname={tabName} extraText={""} setTab={setTab} />
             {
-                tab == tabName &&
+                tab === tabName &&
                 <div className='TabBodyDiv'>
-
+                    {groupList.length === 0 && <h4>Não existem grupos.</h4>}
                     {groupList.map((group) => (<Group data_criacao={group.data_criacao} imagem={group.imagem} nome={group.nome} pk={group.pk} key={group.pk} />))}
                     {/* {groupList} */}
                 </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BACKEND_PATH } from './constants'
-import axios from "axios"
+// import axios from "axios"
 import "../css/Tabs.css"
 
 

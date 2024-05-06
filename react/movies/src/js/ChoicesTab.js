@@ -20,14 +20,16 @@ function ChoicesTab({ tab, setTab, event, username }) {
     function Choice({ pk, sessao, filme, votos }) {
         const onClickRemove = () => {
             axios.delete(BACKEND_PATH + "voto/", { data: { username: username, token: localStorage.getItem("token"), voto: pk } })
-                .catch((e) => { console.log(e) });
+                .then(() => { getChoiceList() })
+                .catch((e) => { console.log(e);getChoiceList() });
             getChoiceList();
 
         }
         const onClickAdd = () => {
             axios.post(BACKEND_PATH + "voto/", { username: username, token: localStorage.getItem("token"), voto: pk })
-                .catch((e) => { console.log(e) });
-            getChoiceList();
+                .then(() => { getChoiceList() })
+                .catch((e) => { console.log(e);getChoiceList() });
+            ;
 
         }
         const duracao = Math.floor(filme.duracao / 3600) + "h:" + Math.floor((filme.duracao % 3600) / 60) + "m"
@@ -43,20 +45,20 @@ function ChoicesTab({ tab, setTab, event, username }) {
                     <button onClick={onClickAdd}>Votar</button>
                 </>
                 }
-                <h5>Votos: {votos.count}</h5>
-                <h5>Filme: {filme.nome}</h5>
-                <img src={filme.imagem} width={"80%"} />
-                <h5>Sessão: {sessao}</h5>
-                <h5>Género: {filme.genre}</h5>
-                <h5>Saga: {filme.saga}</h5>
-                <h5>Duração: {duracao}</h5>
-                <h5>Publicado: {filme.data_publicacao}</h5>
+                <strong>Votos: </strong>{votos.count}
+                <strong>Filme: </strong>{filme.nome}
+                <img src={filme.imagem} alt="Sem imagem"/>
+                <strong>Sessão: </strong>{sessao}
+                <strong>Género: </strong>{filme.genre}
+                <strong>Saga: </strong>{filme.saga}
+                <strong>Duração: </strong>{duracao}
+                <strong>Publicado: </strong>{filme.data_publicacao}
             </div>
         )
     }
 
     useEffect(() => {
-        if (event != -1) {
+        if (event !== -1) {
             getChoiceList()
         }
     },
@@ -64,13 +66,14 @@ function ChoicesTab({ tab, setTab, event, username }) {
 
     return (
         <div>
-            {tab == tabName &&
+            {tab === tabName &&
 
                 <TabHeader tabname={tabName} extraText={""} setTab={setTab} />
             }            {
-                tab == tabName &&
+                tab === tabName &&
                 <div className='TabBodyDiv TabLast'>
                     {/* TODO Escolhas */}
+                    {choiceList.length === 0 && <h4>Não existem escolhas.</h4>}
                     {choiceList.map((choice) => (<Choice sessao={choice.sessao} pk={choice.pk} key={choice.pk} filme={choice.filme} votos={choice.votos} />))}
                 </div>
             }

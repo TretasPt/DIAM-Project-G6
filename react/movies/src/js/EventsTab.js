@@ -12,7 +12,7 @@ function EventTab({ tab, setTab, group, setEvent, username }) {
 
     const getEventList = () => {
         axios.post(BACKEND_PATH + "eventos/", { username: username, token: localStorage.getItem("token"), grupo: group })
-            .then((r) => {setEventList(r.data) })
+            .then((r) => { setEventList(r.data) })
             .catch((e) => { console.log(e) })
     }
 
@@ -22,32 +22,31 @@ function EventTab({ tab, setTab, group, setEvent, username }) {
             setEvent(pk)
         }
         return (
-            <div>
-                <h5>Nome: {nome}</h5>
+            <div className='TabElement'>
+                <strong>Nome: </strong>{nome}
                 <button onClick={onClick}>Selecionar</button>
             </div>
         )
     }
 
     useEffect(() => {
-        if (group != -1) {
+        if (group !== -1) {
             getEventList()
         }
     },
         [group, tab])
 
     return (
-        <div className='TabElement'>
-            {(tab == tabName || tab == "Escolhas") &&
+        <div>
+            {(tab === tabName || tab === "Escolhas") &&
 
                 <TabHeader tabname={tabName} extraText={""} setTab={setTab} />
             }
             {
-                tab == tabName &&
+                tab === tabName &&
                 <div className='TabBodyDiv'>
+                    {eventList.length === 0 && <h4>Não existem eventos.</h4>}
 
-                    {/* TODO Eventos
-                    <button onClick={setTab.bind(this, "Escolhas")}>AAA</button> */}
                     {eventList.map((event) => (<Event nome={event.nome} pk={event.pk} key={event.pk} />))}
 
                 </div>
