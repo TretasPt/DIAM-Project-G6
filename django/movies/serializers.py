@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Evento,EscolhaFilme,Voto,Grupo,Saga,Genre,Filme#,Utilizador
+from .models import Evento,EscolhaFilme,Voto,Grupo,Saga,Genre,Filme
 
 class GrupoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,5 +38,3 @@ class FilmeSerializer(serializers.ModelSerializer):
         model = Filme
         fields = ('pk','nome','genre','saga','duracao','imagem','data_publicacao')
 
-
-#May need to add: utilizador|user

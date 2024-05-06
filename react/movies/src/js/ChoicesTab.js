@@ -73,7 +73,6 @@ function ChoicesTab({ tab, setTab, event, username }) {
             }            {
                 tab === tabName &&
                 <div className='TabBodyDiv TabLast'>
-                    {/* TODO Escolhas */}
                     {choiceList.length === 0 && <h4>Não existem escolhas.</h4>}
                     {choiceList.map((choice) => (<Choice sessao={choice.sessao} pk={choice.pk} key={choice.pk} filme={choice.filme} votos={choice.votos} />))}
                 </div>

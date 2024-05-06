@@ -40,7 +40,6 @@ function GroupTab({ tab, setTab, username, setGroup }) {
                 <div className='TabBodyDiv'>
                     {groupList.length === 0 && <h4>Não existem grupos.</h4>}
                     {groupList.map((group) => (<Group data_criacao={group.data_criacao} imagem={group.imagem} nome={group.nome} pk={group.pk} key={group.pk} />))}
-                    {/* {groupList} */}
                 </div>
             }
 

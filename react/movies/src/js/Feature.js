@@ -1,4 +1,3 @@
-// import { BACKEND_PATH } from './constants'
 import "../css/Feature.css"
 import { useState } from 'react';
 import GroupTab from './GroupsTab';

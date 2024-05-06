@@ -58,7 +58,6 @@ function Autentication({ username, setUsername, isAutenticated, setIsAutenticate
         )
     } else {
         return (
-            // <h6>TODO</h6>
             <div className="auth">
                 <h2>Login</h2>
                 {error && <p>{error}</p>}
