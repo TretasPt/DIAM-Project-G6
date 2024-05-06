@@ -10,11 +10,6 @@ function EventTab({ tab, setTab, group, setEvent, username }) {
 
     const [eventList, setEventList] = useState([])
 
-    const getEventList = () => {
-        axios.post(BACKEND_PATH + "eventos/", { username: username, token: localStorage.getItem("token"), grupo: group })
-            .then((r) => { setEventList(r.data) })
-            .catch((e) => { console.log(e) })
-    }
 
     function Event({ nome, pk }) {
         const onClick = () => {
@@ -31,10 +26,12 @@ function EventTab({ tab, setTab, group, setEvent, username }) {
 
     useEffect(() => {
         if (group !== -1) {
-            getEventList()
+            axios.post(BACKEND_PATH + "eventos/", { username: username, token: localStorage.getItem("token"), grupo: group })
+                .then((r) => { setEventList(r.data) })
+                .catch((e) => { console.log(e) })
         }
     },
-        [group, tab])
+        [group, tab, username])
 
     return (
         <div>

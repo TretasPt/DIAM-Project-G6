@@ -10,11 +10,6 @@ function GroupTab({ tab, setTab, username, setGroup }) {
 
     const [groupList, setGroupList] = useState([])
 
-    const getGroupList = () => {
-        axios.post(BACKEND_PATH + "grupos/", { username: username, token: localStorage.getItem("token") })
-            .then((r) => { setGroupList(r.data) })
-            .catch((e) => { console.log(e) })
-    }
 
     function Group({ data_criacao, imagem, nome, pk }) {
         const onClick = () => {
@@ -31,7 +26,11 @@ function GroupTab({ tab, setTab, username, setGroup }) {
         )
     }
 
-    useEffect(() => { getGroupList() }, [username,tab])
+    useEffect(() => {
+        axios.post(BACKEND_PATH + "grupos/", { username: username, token: localStorage.getItem("token") })
+            .then((r) => { setGroupList(r.data) })
+            .catch((e) => { console.log(e) })
+    }, [username, tab])
 
     return (
         <div>

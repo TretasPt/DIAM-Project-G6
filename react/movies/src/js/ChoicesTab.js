@@ -21,14 +21,14 @@ function ChoicesTab({ tab, setTab, event, username }) {
         const onClickRemove = () => {
             axios.delete(BACKEND_PATH + "voto/", { data: { username: username, token: localStorage.getItem("token"), voto: pk } })
                 .then(() => { getChoiceList() })
-                .catch((e) => { console.log(e);getChoiceList() });
+                .catch((e) => { console.log(e); getChoiceList() });
             getChoiceList();
 
         }
         const onClickAdd = () => {
             axios.post(BACKEND_PATH + "voto/", { username: username, token: localStorage.getItem("token"), voto: pk })
                 .then(() => { getChoiceList() })
-                .catch((e) => { console.log(e);getChoiceList() });
+                .catch((e) => { console.log(e); getChoiceList() });
             ;
 
         }
@@ -47,7 +47,7 @@ function ChoicesTab({ tab, setTab, event, username }) {
                 }
                 <strong>Votos: </strong>{votos.count}
                 <strong>Filme: </strong>{filme.nome}
-                <img src={filme.imagem} alt="Sem imagem"/>
+                <img src={filme.imagem} alt="Sem imagem" />
                 <strong>Sessão: </strong>{sessao}
                 <strong>Género: </strong>{filme.genre}
                 <strong>Saga: </strong>{filme.saga}
@@ -62,6 +62,7 @@ function ChoicesTab({ tab, setTab, event, username }) {
             getChoiceList()
         }
     },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [event, tab])
 
     return (
