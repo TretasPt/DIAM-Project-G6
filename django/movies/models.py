@@ -55,6 +55,7 @@ class Publicacao(models.Model):
     filme = models.ForeignKey(Filme, models.CASCADE,blank=True,null=True)
     timestamp_inicio = models.TimeField(blank=True,null=True)#TODO Consider using models.IntegerField() instead
     timestamp_fim = models.TimeField(blank=True,null=True)#TODO Consider using models.IntegerField() instead
+    utilizador = models.ForeignKey(Utilizador, models.CASCADE)
 
 class Mensagem(models.Model):
     sender = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)
