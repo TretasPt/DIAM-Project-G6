@@ -1,7 +1,7 @@
 .TabHeaderDiv{
     border-style: solid;
-    border-top-right-radius: 10%;
-    border-top-left-radius: 10%;
+    border-top-right-radius: 5vw;
+    border-top-left-radius: 5vw;
     border-bottom-style: none;
     padding: 10%;
     margin-bottom: -15%;
@@ -14,11 +14,29 @@
     border-top-style: dashed;
     border-bottom-style: none;
     padding: 30%;
-    margin-bottom: -15%;
+    /* margin-bottom: -15%; */
 /* }
 
 .TabLast{ */
     border-bottom-style: solid;
-    border-bottom-right-radius: 10%;
-    border-bottom-left-radius: 10%;
+    border-bottom-right-radius: 5vw;
+    border-bottom-left-radius: 5vw;
+}
+
+.TabElement{
+    /* border-style: solid; */
+    border-color:cadetblue;
+    border-width: 1px;
+
+}
+
+.auth{
+    padding: 5%;
+    text-align: center;
+    border-color: cadetblue;
+    border-width: 3px;
+    border-style: dashed;
+    border-radius: 5vw;
+    margin: 5%;
+    width: 80%;
 }

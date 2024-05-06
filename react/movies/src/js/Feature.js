@@ -10,16 +10,14 @@ function Feature({ username }) {
 
     const [tab, setTab] = useState("Grupos")//Values will be "Grupos","Eventos" or "Escolhas"
 
+    const [group, setGroup] = useState(-1)
+    const [event, setEvent] = useState(-1)
+
     return (
         <div className="Feature-Container" >
-            <a href={BACKEND_PATH.replace("/api", "")}>
-                Django app
-            </a>
-            {tab}
-            {username}
-            <GroupTab setTab={setTab} tab={tab}/>
-            <EventsTab setTab={setTab} tab={tab}/>
-            <ChoicesTab setTab={setTab} tab={tab}/>
+            <GroupTab setTab={setTab} tab={tab} username={username} setGroup={setGroup} />
+            <EventsTab setTab={setTab} tab={tab} group={group} setEvent={setEvent} username={username} />
+            <ChoicesTab setTab={setTab} tab={tab} event={event} username={username} />
         </div>
     );
 }

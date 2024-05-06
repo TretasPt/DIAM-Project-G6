@@ -13,7 +13,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Autentication setUsername={setUsername} isAutenticated={isAutenticated} setIsAutenticated={setIsAutenticated} username={username} />
-        <Feature username={username}/>
+        {
+          isAutenticated &&
+          <Feature username={username} />
+        }
       </header>
     </div>
   );

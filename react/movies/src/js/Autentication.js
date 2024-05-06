@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { BACKEND_PATH } from './constants'
 import axios from "axios"
+import "../css/Tabs.css"
 
 
-function Autentication({username,setUsername,isAutenticated, setIsAutenticated}) {
+
+function Autentication({ username, setUsername, isAutenticated, setIsAutenticated }) {
     const [password, setPassword] = useState('');
     const [msg, setMsg] = useState('');
     const [error, setError] = useState('');
 
     const handleLogout = () => {
         setIsAutenticated(false)
+        setMsg("")
     }
 
     const handleLogin = async (e) => {
@@ -45,15 +48,18 @@ function Autentication({username,setUsername,isAutenticated, setIsAutenticated})
 
     if (isAutenticated) {
         return (
-            <div>
-                Username:{username}
+            <div className="auth" >
+                <div>
+                    <span style={{ fontWeight: "bold" }}>Username: </span>
+                    {username}
+                </div>
                 <button onClick={handleLogout}>Logout</button>
             </div>
         )
     } else {
         return (
             // <h6>TODO</h6>
-            <div>
+            <div className="auth">
                 <h2>Login</h2>
                 {error && <p>{error}</p>}
                 {<p>{msg}</p>}
