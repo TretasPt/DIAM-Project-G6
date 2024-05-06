@@ -1,6 +1,12 @@
-from django.shortcuts import render
-from django.http import HttpResponse
 from .models import *
+from .serializers import *
+from django.contrib.auth import authenticate
+from django.http import HttpResponse,JsonResponse
+# from django.shortcuts import render
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 # Create your views here.
 def index(request):
@@ -120,3 +126,106 @@ def databaseTest(request):
 
     output += "</ul>\n"
     return HttpResponse(output)
+
+@api_view(['POST'])
+def login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    user = authenticate(username=username, password=password)
+    if user:
+        token, _ = Token.objects.get_or_create(user=user)
+        return JsonResponse({'token': token.key})
+    else:
+        return JsonResponse({'error': 'Credenciais inválidas'}, status=400)
+
+
+
+
+@api_view(['POST'])
+def grupos(request):
+    username = request.data.get('username')
+    token = request.data.get("token")
+    if(username==None or token==None):
+        return Response({'error':"Not enough arguments passed. Expected username and token."},status=status.HTTP_400_BAD_REQUEST)
+    try:
+        user = Utilizador.objects.get(user__username=username)
+    except Utilizador.DoesNotExist:
+        return Response({'error':"Couldn't find user."},status=status.HTTP_400_BAD_REQUEST)
+
+    groups_of_user = UtilizadorGrupo.objects.filter(convite_por_aceitar=False,utilizador=user).values("grupo")
+    groups = Grupo.objects.filter(id__in=groups_of_user)
+    serializer = GrupoSerializer(groups,many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def eventos(request):
+    username = request.data.get('username')
+    token = request.data.get("token")
+    grupo = request.data.get("grupo")
+    if(username==None or token==None or grupo == None):
+        return Response({'error':"Not enough arguments passed. Expected username,token and grupo."},status=status.HTTP_400_BAD_REQUEST)
+    eventos = Evento.objects.filter(grupo__id=grupo)
+    serializer = EventoSerializer(eventos,many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def escolhas(request):
+    username = request.data.get('username')
+    token = request.data.get("token")
+    evento = request.data.get("evento")
+    if(username==None or token==None or evento == None):
+        return Response({'error':"Not enough arguments passed. Expected username,token and evento."},status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        user = Utilizador.objects.get(user__username=username)
+    except Utilizador.DoesNotExist:
+        return Response({'error':"Couldn't find user."},status=status.HTTP_400_BAD_REQUEST)
+
+    escolhas = EscolhaFilme.objects.filter(evento__id=evento)
+    serializer = EscolhaFilmeSerializer(escolhas,many=True)
+
+    def addFields(ef):
+        filme = FilmeSerializer(Filme.objects.get(id=ef['filme'])).data
+        filme['genre']= Genre.objects.get(id=filme['genre']).nome#TODO handle movies without genre
+        filme['saga']= Saga.objects.get(id=filme['saga']).nome#TODO handle movies without saga
+        ef['filme'] = filme
+        votos = Voto.objects.filter(voto=ef['pk'])
+        count = len(votos)
+        user_voted = len(votos.filter(utilizador=user)) >0
+        ef['votos'] = {'count':count,'user_voted':user_voted}
+        return ef
+    res = list(map(addFields, serializer.data))
+    return Response(res)
+
+@api_view(['POST','DELETE'])
+def voto(request):
+    username = request.data.get('username')
+    token = request.data.get("token")
+    voto = request.data.get('voto')#Um id para um EscolhaFilme
+    if(username==None or token==None or voto==None):
+        return Response({'error':"Not enough arguments passed. Expected username,token and voto."},status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        user = Utilizador.objects.get(user__username=username)
+    except Utilizador.DoesNotExist:
+        return Response({'error':"Couldn't find user."},status=status.HTTP_400_BAD_REQUEST)
+
+    escolha_filme = EscolhaFilme.objects.get(id=voto)
+    temp_voto=Voto.objects.filter(utilizador=user,voto=escolha_filme)
+
+    if request.method=='POST':
+        if(len(temp_voto)!=0):
+            return Response({'error':"Can't create more vote. User already has a vote on this."},status=status.HTTP_400_BAD_REQUEST)
+        #create
+        new_voto = Voto(utilizador=user,voto=escolha_filme)
+        new_voto.save()
+        return Response(status=status.HTTP_201_CREATED)
+    elif request.method=='DELETE':
+        if(len(temp_voto)==0):
+            return Response({'error':"Can't delete vote. No vote bellonging to current user."},status=status.HTTP_400_BAD_REQUEST)
+        #delete
+        temp_voto[0].delete()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response({'error':'Invalid request method. Methods allowed:POST,DELETE'},status=status.HTTP_400_BAD_REQUEST)
+
