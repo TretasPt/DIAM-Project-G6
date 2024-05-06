@@ -57,7 +57,8 @@ def databaseTest(request):
 
     output += "<li>Publicacao<ul>\n"
     for pub in Publicacao.objects.all():
-        output+= "<li> <ul> <li>Permissão:"+pub.permissao+"</li>\n"
+        output+= "<li> <ul> <li>Utilizador:"+pub.utilizador.user.username+"</li>\n"
+        output+= "<li>Permissão:"+pub.permissao+"</li>\n"
         output+= "<li>Parent:" + (str(pub.parent) if pub.parent else "Não definido") + "</li>\n"
         output+= "<li>Data de publicação:" + str(pub.data_publicacao) + "</li>\n"
         output+= "<li>Texto:" + pub.texto + "</li>\n"
