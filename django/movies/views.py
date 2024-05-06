@@ -160,17 +160,13 @@ def grupos(request):
     token = request.data.get("token")
     if(username==None or token==None):
         return Response({'error':"Not enough arguments passed. Expected username and token."},status=status.HTTP_400_BAD_REQUEST)
-    print(str(username) + "|" + str(token) + "|" + str((username != None) and (token != None)))
     try:
         user = Utilizador.objects.get(user__username=username)
     except Utilizador.DoesNotExist:
         return Response({'error':"Couldn't find user."},status=status.HTTP_400_BAD_REQUEST)
-    print(user.user.username)
 
     groups_of_user = UtilizadorGrupo.objects.filter(convite_por_aceitar=False,utilizador=user).values("grupo")
-    print(groups_of_user)
     groups = Grupo.objects.filter(id__in=groups_of_user)
-    print(groups)
     serializer = GrupoSerializer(groups,many=True)
     return Response(serializer.data)
 
@@ -181,9 +177,7 @@ def eventos(request):
     grupo = request.data.get("grupo")
     if(username==None or token==None or grupo == None):
         return Response({'error':"Not enough arguments passed. Expected username,token and grupo."},status=status.HTTP_400_BAD_REQUEST)
-    print(grupo)
     eventos = Evento.objects.filter(grupo__id=grupo)
-    print(eventos)
     serializer = EventoSerializer(eventos,many=True)
     return Response(serializer.data)
 
