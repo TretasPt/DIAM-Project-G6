@@ -5,7 +5,11 @@ from .models import *
 # Create your views here.
 
 def index(request):
-    return render(request, 'movies/index.html')
+    publicacoes_list = Publicacao.objects.order_by('-data_publicacao')#[:5]  TODO
+    context = {
+        'publicacoes_list':publicacoes_list
+    }
+    return render(request, 'movies/index.html', context)
 
 def databaseTest(request):
     output = "<h1>DATABASE DUMP</h1>\n<ul>\n"

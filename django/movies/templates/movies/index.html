@@ -25,44 +25,26 @@
                 </a>
             </nav>
             <main>
+            {% block main %}
                 <section class="scrollbox">
-                    <section class="postbox">
-                        <section class="posttopic">
-                            .
-                            <section class="posttopicimage"></section>
-                            <section class="posttopictitle"></section>
-                        </section>
-                        <section class="postcontent">
-                            <section class="posttext">
-                                War for the Planet of the Apes is a tour de force in storytelling and visual effects. The film masterfully concludes Caesar's journey, portrayed with unparalleled depth by Andy Serkis. Its exploration of themes like morality, survival, and the consequences of war resonates long after the credits roll. Director Matt Reeves crafts a haunting yet beautiful world, enriched by stunning cinematography and a poignant score. The emotional depth of the characters, both human and ape, is profoundly moving, drawing audiences into their struggles and triumphs. With its blend of action, drama, and philosophical undertones, War for the Planet of the Apes stands as a triumph of modern cinema, solidifying its place as one of the greatest sci-fi trilogies of all time.
+                    {% if publicacoes_list %}
+                        {% for publicacao in publicacoes_list %}
+                            <section class="postbox">
+                                <section class="posttopic">
+                                    .
+                                    <section class="posttopicimage"></section>
+                                    <section class="posttopictitle"></section>
+                                </section>
+                                <section class="postcontent">
+                                    <section class="posttext">
+                                        {{ publicacao.texto }}
+                                    </section>
+                                </section>
                             </section>
-                        </section>
-                    </section>
-                    <section class="postbox">
-                        <section class="posttopic">
-                            .
-                            <section class="posttopicimage"></section>
-                            <section class="posttopictitle"></section>
-                        </section>
-                        <section class="postcontent">
-                            <section class="posttext">
-                                The Berserk trilogy adapts Kentaro Miura's epic manga with raw intensity. Each film immerses viewers in a dark, brutal world where ambition clashes with destiny. The animation style, though controversial, captures the manga's essence, evoking a gritty atmosphere. Guts' journey from lone mercenary to reluctant leader is portrayed with depth, while Griffith's descent into darkness is chillingly portrayed. The trilogy's greatest strength lies in its unflinching exploration of complex themes like fate, betrayal, and the human condition. However, pacing issues and omitted plot points may leave fans wanting more. Overall, Berserk delivers a visceral, thought-provoking experience that stays with you long after the credits roll.
-                            </section>
-                        </section>
-                    </section>
-                    <section class="postbox">
-                        <section class="posttopic">
-                            .
-                            <section class="posttopicimage"></section>
-                            <section class="posttopictitle"></section>
-                        </section>
-                        <section class="postcontent">
-                            <section class="posttext">
-                                The Star Wars saga is an iconic epic that has captivated audiences for generations. Spanning nine mainline films, it weaves a rich tapestry of adventure, mythology, and timeless themes. From the timeless hero's journey of Luke Skywalker to the complex redemption arc of Darth Vader, each installment is a masterclass in storytelling. The saga's vast universe is brought to life through groundbreaking special effects and memorable characters like Han Solo, Princess Leia, and Rey. While some entries have sparked debate among fans, the saga as a whole remains a cultural phenomenon that continues to inspire and enchant audiences worldwide. Whether you're a Jedi Knight or a scruffy-looking nerf herder, there's something in the Star Wars saga for everyone. May the Force be with you, always.
-                            </section>
-                        </section>
-                    </section>
+                        {% endfor %}
+                    {% endif %}
                 </section>
+            {% endblock %}
             </main>
             <aside class="socialpanel">
                 <section id="createpostbox" class="socialbox">

@@ -40,7 +40,6 @@ class Grupo(models.Model):
     imagem = models.CharField(max_length=200)#TODO Imagens como caminhos?
 
 class Publicacao(models.Model):
-
     class Permissao(models.TextChoices):
         TODOS = 'T' , _('Todos')
         Grupo = 'G' , _('Grupo')
