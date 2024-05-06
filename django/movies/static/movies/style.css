@@ -8,6 +8,8 @@ header {
 }
 
 main {
+    flex: 1;
+    margin-right: 0;
     height:98vh;
     background-color: gainsboro;
     scrollbar-color: #8a334a gainsboro;
@@ -77,6 +79,7 @@ main {
 }
 
 .personalpanel {
+    width: 7vw;
     height: 98vh;
     background-color: #8a334a;
     display: flex;
@@ -85,6 +88,7 @@ main {
 
 .socialpanel {
     height: 98vh;
+    width: 30vw;
     background-color: #8a334a;
     display: flex;
     flex-direction: column;
@@ -120,9 +124,13 @@ main {
     scrollbar-color: #8a334a gainsboro;
 }
 
+#noaside {
+    width: 7vw;
+}
+
 #fixedcontent {
-    position: fixed;
-    display: grid;
+    display: flex;
+    flex-direction: row;
     grid-template-columns: 7vw 63vw 30vw;
 }
 
