@@ -1,25 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
-import datetime
+# from django.utils import timezone
+# import datetime
 from django.utils.translation import gettext_lazy as _
 
-# Create your models here.
 #TODO Check all the field options.
 #TODO Check all max_length s
-#TODO Remove blank=True s
-#TODO Imagens default ou imagens null?
-
-# date = models.DateTimeField(auto_now_add=True, blank=True)
-
 
 class Utilizador(models.Model):
     #Nome é parte do user
-    user = models.OneToOneField(User,on_delete=models.RESTRICT)#TODO On delete CASCADE?
-    data_adesao = models.DateTimeField()#TODO Check options
-    verificado = models.BooleanField(default=False)#TODO Check options
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    data_adesao = models.DateTimeField(auto_now_add=True)
+    verificado = models.BooleanField(default=False)
     imagem = models.CharField(max_length=200,default="NO_USER_IMAGE")
-    #TODO Add imagem
 
 class Saga(models.Model):
     nome = models.CharField(max_length=100)
@@ -32,28 +25,28 @@ class Filme(models.Model):
     genre = models.ForeignKey(Genre, models.SET_NULL, null=True)
     saga = models.ForeignKey(Saga, models.SET_NULL,blank=True,null=True)
     duracao = models.IntegerField()
-    imagem = models.CharField(max_length=200,default="NO_MOVIE_IMAGE")#TODO Imagens como caminhos?#TODO Imagem default?
+    imagem = models.CharField(max_length=200,default="NO_MOVIE_IMAGE")
     data_publicacao = models.DateField()#Não precisa de ser DateTime porque não tem time.
 
 class Cinema(models.Model):
     localizacao = models.CharField(max_length=200)
-    administrador = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)#TODO Check this
+    administrador = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)#Cinemas sem administrador ficam a null.
 
 class Grupo(models.Model):
-    data_criacao = models.DateTimeField()
+    data_criacao = models.DateTimeField(auto_now_add=True)
     nome = models.CharField(max_length=100)
-    imagem = models.CharField(max_length=200,default="NO_GROUP_IMAGE")#TODO Imagens como caminhos?
+    imagem = models.CharField(max_length=200,default="NO_GROUP_IMAGE")
 
 class Publicacao(models.Model):
 
     class Permissao(models.TextChoices):
-        TODOS = 'T' , _('Todos')
-        Grupo = 'G' , _('Grupo')
+        EVERYONE = 'T' , _('Todos')
+        GROUP = 'G' , _('Grupo')
         CINEMA = 'C' , _('Cinema')
 
     permissao = models.CharField(max_length=1,choices=Permissao.choices,default=Permissao.TODOS)
     parent = models.ForeignKey('self', models.SET_NULL,blank=True,null=True)
-    data_publicacao = models.DateTimeField()
+    data_publicacao = models.DateTimeField(auto_now_add=True)
     texto = models.CharField(max_length=1000)#TODO Mayeb use models.TextField() instead
     grupo = models.ForeignKey(Grupo, models.CASCADE,blank=True,null=True)
     cinema = models.ForeignKey(Cinema, models.CASCADE,blank=True,null=True)
@@ -65,7 +58,7 @@ class Publicacao(models.Model):
 class Mensagem(models.Model):
     sender = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)
     grupo = models.ForeignKey(Grupo, models.CASCADE)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(auto_now_add=True)
     texto = models.CharField(max_length=1000)#TODO Mayeb use models.TextField() instead
 
 class Evento(models.Model):
@@ -88,19 +81,20 @@ class ListaFilmes(models.Model):
         FUTUROS = 'F' , _('Futuros')
 
     tipo = models.CharField(max_length=1,choices=Tipo.choices)
-    utilizador = models.ForeignKey(Utilizador, models.CASCADE, blank=True, null=True)#null=true?
+    utilizador = models.ForeignKey(Utilizador, models.CASCADE, blank=True, null=True)
     grupo = models.ForeignKey(Grupo, models.CASCADE,blank=True, null=True)
+    #TODO Check if it has either a group or a user
 
 class ElementoLista(models.Model):
     lista = models.ForeignKey(ListaFilmes, models.CASCADE)
     filme = models.ForeignKey(Filme, models.CASCADE)
 
 class UtilizadorGrupo(models.Model):
-    utilizador = models.ForeignKey(Utilizador, models.CASCADE)#TODO Mudar para restrict
+    utilizador = models.ForeignKey(Utilizador, models.CASCADE)
     grupo = models.ForeignKey(Grupo, models.CASCADE)
-    administrador = models.BooleanField(default=False)#TODO Check default
+    administrador = models.BooleanField(default=False)
     convite_por_aceitar = models.BooleanField(default=True)
-    date_joined = models.DateTimeField()#Para eleger o proximo admin em caso de saida.#TODO Pode ser null se ainda não tiver aceite o convite
+    date_joined = models.DateTimeField(null=True)#Para eleger o proximo admin em caso de saida. Pode ser null se ainda não tiver aceite o convite
 
 class UtilizadorCinema(models.Model):
     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
