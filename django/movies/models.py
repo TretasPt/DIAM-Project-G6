@@ -10,11 +10,16 @@ from django.utils.translation import gettext_lazy as _
 #TODO Remove blank=True s
 #TODO Imagens default ou imagens null?
 
+# date = models.DateTimeField(auto_now_add=True, blank=True)
+
+
 class Utilizador(models.Model):
     #Nome é parte do user
     user = models.OneToOneField(User,on_delete=models.RESTRICT)#TODO On delete CASCADE?
     data_adesao = models.DateTimeField()#TODO Check options
     verificado = models.BooleanField(default=False)#TODO Check options
+    imagem = models.CharField(max_length=200,default="NO_USER_IMAGE")
+    #TODO Add imagem
 
 class Saga(models.Model):
     nome = models.CharField(max_length=100)
@@ -27,7 +32,7 @@ class Filme(models.Model):
     genre = models.ForeignKey(Genre, models.SET_NULL, null=True)
     saga = models.ForeignKey(Saga, models.SET_NULL,blank=True,null=True)
     duracao = models.IntegerField()
-    imagem = models.CharField(max_length=200)#TODO Imagens como caminhos?#TODO Imagem default?
+    imagem = models.CharField(max_length=200,default="NO_MOVIE_IMAGE")#TODO Imagens como caminhos?#TODO Imagem default?
     data_publicacao = models.DateField()#Não precisa de ser DateTime porque não tem time.
 
 class Cinema(models.Model):
@@ -37,7 +42,7 @@ class Cinema(models.Model):
 class Grupo(models.Model):
     data_criacao = models.DateTimeField()
     nome = models.CharField(max_length=100)
-    imagem = models.CharField(max_length=200)#TODO Imagens como caminhos?
+    imagem = models.CharField(max_length=200,default="NO_GROUP_IMAGE")#TODO Imagens como caminhos?
 
 class Publicacao(models.Model):
 
@@ -95,7 +100,7 @@ class UtilizadorGrupo(models.Model):
     grupo = models.ForeignKey(Grupo, models.CASCADE)
     administrador = models.BooleanField(default=False)#TODO Check default
     convite_por_aceitar = models.BooleanField(default=True)
-    date_joined = models.DateTimeField()#Para eleger o proximo admin em caso de saida.
+    date_joined = models.DateTimeField()#Para eleger o proximo admin em caso de saida.#TODO Pode ser null se ainda não tiver aceite o convite
 
 class UtilizadorCinema(models.Model):
     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
