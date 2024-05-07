@@ -14,6 +14,15 @@ class Utilizador(models.Model):
     verificado = models.BooleanField(default=False)
     imagem = models.CharField(max_length=200,default="NO_USER_IMAGE")
 
+# def UtilizadorConstructor(username,password,email,imagem):
+#     user = User.objects.create_user(username=username,password=password,email=email)
+
+
+
+#     # utilizador = Utilizador(user=user,imagem=)
+#     # return utilizador
+
+
 class Saga(models.Model):
     nome = models.CharField(max_length=100)
 
@@ -99,3 +108,4 @@ class UtilizadorGrupo(models.Model):
 class UtilizadorCinema(models.Model):
     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
     cinema = models.ForeignKey(Cinema,models.CASCADE)
+
