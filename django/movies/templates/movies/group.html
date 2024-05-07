@@ -3,6 +3,18 @@
 {% load static %}
 
 {% block main_content %}
+    {% if mensagens_list %}
+        {% for mensagem in mensagens_list %}
+            <section class="message">
+                <section class="messageprofileimgcropper">
+                    <img id="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>
+                </section>
+                <section class="messagetext">
+                    {{ mensagem.texto }}
+                </section>
+            </section>
+        {% endfor %}
+    {% endif %}
     <section class="message">
         <section class="messageprofileimgcropper">
             <img id="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>

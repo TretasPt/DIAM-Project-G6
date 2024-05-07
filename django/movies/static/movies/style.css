@@ -87,7 +87,7 @@ header {
 }
 
 .groupbox {
-    height: 5vh;
+    height: 5.12vh;
     transition: 0.4s;
 }
 
@@ -138,10 +138,14 @@ header {
 }
 
 .messageprofileimgcropper {
-    width: 30px;
-    height: 30px;
+    width: 2.5vw;
+    height: 2.5vw;
     border-radius: 50%;
     overflow: hidden;
+}
+
+.messagetext {
+    width: 80%;
 }
 
 /* Layout 1 */
