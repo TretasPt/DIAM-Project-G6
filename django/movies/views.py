@@ -1,30 +1,68 @@
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
 from .models import *
-
-# Create your views here.
 
 def index(request):
     publicacoes_list = Publicacao.objects.order_by('-data_publicacao')#[:5]  TODO
-    context = {
-        'publicacoes_list':publicacoes_list
-    }
-    return render(request, 'movies/index.html', context)
+    return render(request, 'movies/index.html', {
+        'publicacoes_list': publicacoes_list
+    })
 
-def register(request):
+def registerUser(request):
     if (request.method == 'POST'):
-        print('register')
+        user = User.objects.create_user(
+            username=request.POST['username'],
+            email=request.POST['email'],
+            password=request.POST['password'],
+        )
+        utilizador = Utilizador(
+            user=user,
+        )
+        utilizador.save()
+        return HttpResponseRedirect(reverse('movies:index'))
     else:
         return render(request, 'movies/register.html')
 
-def login(request):
+def loginUser(request):
     if (request.method == 'POST'):
-        print('login')
+        try:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(
+                username=username,
+                password=password
+            )
+        except KeyError:
+            return render(request, 'movies/login.html')
+        if user:
+            login(request, user)
+            setProfilePicture(user)
+            return HttpResponseRedirect(reverse('votacao:index'))
+        else:
+            return render(request, 'movies/login.html', {
+                'error_message': 'Falha de login'
+            })
     else:
         return render(request, 'movies/login.html')
 
 def group(request):
-    return render(request, 'movies/group.html')
+    mensagens_list = Mensagem.objects.order_by('-timestamp')  # [:5]  TODO
+    return render(request, 'movies/group.html', {
+        'mensagens_list': mensagens_list
+    })
+
+@login_required(login_url=reverse_lazy('movies:login'))
+def setProfilePicture(user):
+    print("TODO") #TODO
+
+
+
+
+
+
 
 def databaseTest(request):
     output = "<h1>DATABASE DUMP</h1>\n<ul>\n"
@@ -136,7 +174,6 @@ def databaseTest(request):
         output+= "<li> <ul> <li>Utilizador:"+ uc.utilizador.user.username +"</li>\n"
         output+= "<li>Cinema:" + uc.cinema.localizacao +"</li></ul></li>\n"
     output +="</ul></li>\n"
-
 
     output += "</ul>\n"
     return HttpResponse(output)

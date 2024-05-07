@@ -148,6 +148,23 @@ header {
     width: 80%;
 }
 
+.messageinput {
+    width: 100%;
+    height: 100%;
+    border: none;
+    font-size: 15px;
+}
+
+.diaphragm {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.messageinput_section {
+    height: 50px;
+    background-color: red;
+}
+
 /* Layout 1 */
 .layout1_main {
     flex: 1;
@@ -175,6 +192,10 @@ header {
     scrollbar-color: #8a334a gainsboro;
     overflow: hidden;
     border-radius: 5px;
+
+
+    display: flex;
+    flex-direction: column;
 }
 .layout2_aside {
     height: 98vh;
@@ -189,7 +210,7 @@ header {
     width: 100%;
     position: fixed;
     overflow: hidden;
-    background: linear-gradient(to bottom, rgba(138,51,74,0) 92%, rgba(138,51,74,1));
+    background: linear-gradient(to bottom, rgba(138,51,74,0) 95%, rgba(138,51,74,0));
     pointer-events: none;
 }
 
