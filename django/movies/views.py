@@ -11,8 +11,20 @@ def index(request):
     }
     return render(request, 'movies/index.html', context)
 
+def register(request):
+    if (request.method == 'POST'):
+        print('register')
+    else:
+        return render(request, 'movies/register.html')
+
 def login(request):
-    return render(request, 'movies/login.html')
+    if (request.method == 'POST'):
+        print('login')
+    else:
+        return render(request, 'movies/login.html')
+
+def group(request):
+    return render(request, 'movies/group.html')
 
 def databaseTest(request):
     output = "<h1>DATABASE DUMP</h1>\n<ul>\n"

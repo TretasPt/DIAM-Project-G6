@@ -1,7 +1,7 @@
 {% extends 'movies/base.html' %}
 
 {% block main %}
-    <form id="#loginform" method="post" action="{% url 'movies:doRegister' %}">
+    <form class="userform" method="post" action="{% url 'movies:register' %}">
         <section class="formfield">
             <label for="LoginUsername">Username:</label>
             <input id="LoginUsername" type="text" name="username" required/>

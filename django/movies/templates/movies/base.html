@@ -12,63 +12,23 @@
             <nav class="personalpanel">
                 <header>
                     <section id="profileimgcropper">
-                        <img id="profileimg" src="images/noprofileimg.png"/>
+                        <img id="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>
                     </section>
                 </header>
+                <a class="navbutton" href="{% url 'movies:index' %}"></a>
                 <a class="navbutton"></a>
                 <a class="navbutton"></a>
                 <a class="navbutton"></a>
                 <a class="navbutton"></a>
-                <a class="navbutton"></a>
-                <a id="settings" class="navbutton">
-                    <img id="settingsimg" src="images/settings.png"/>
-                </a>
             </nav>
-            <main>
-            {% block main %}{% endblock %}
-            </main>
+            {% block main %}
+                <!--Main Block-->
+            {% endblock %}
             {% block noaside %}
                 <section id="noaside"></section>
             {% endblock %}
             {% block aside %}
-                <aside class="socialpanel">
-                    <section id="createpostbox" class="socialbox">
-                        Post<br><br><br><br><br><br><br><br><br><br>
-                    </section>
-                    <section class="socialbox groupbox">
-                        <section class="scroll">
-                            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-                        </section>
-                    </section>
-                    <section class="socialbox groupbox">
-                        <section class="scroll">
-                            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-                        </section>
-                    </section>
-                    <section class="socialbox groupbox">
-                        <section class="scroll">
-                            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-                        </section>
-                    </section>
-                    <section class="socialbox groupbox">
-                        <section class="scroll">
-                            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-                        </section>
-                    </section>
-                    <section class="socialbox groupbox">
-                        <section class="scroll">
-                            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-                        </section>
-                    </section>
-                    <section class="socialbox groupbox">
-                        <section class="scroll">
-                            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-                        </section>
-                    </section>
-                    <section id="dontknowbox" class="socialbox">
-                        Filmes nos cinamas locais (Com setas à esquerda e direita para ver a lista de filmes)
-                    </section>
-                </aside>
+                <!--Aside Block-->
             {% endblock %}
         </section>
         <footer>
