@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 # from django.utils import timezone
 # import datetime
 from django.utils.translation import gettext_lazy as _
+# from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
 #TODO Check all the field options.
 #TODO Check all max_length s
@@ -14,13 +16,17 @@ class Utilizador(models.Model):
     verificado = models.BooleanField(default=False)
     imagem = models.CharField(max_length=200,default="NO_USER_IMAGE")
 
-# def UtilizadorConstructor(username,password,email,imagem):
-#     user = User.objects.create_user(username=username,password=password,email=email)
+    def create(username,password,email,imagem):
+        #TODO delete partial user if anything fails
+        user = User.objects.create_user(username=username,password=password,email=email)
 
+        fs = FileSystemStorage()
+        filename = fs.save(imagem.name, imagem)
+        image_url = fs.url(filename)
 
-
-#     # utilizador = Utilizador(user=user,imagem=)
-#     # return utilizador
+        utilizador = Utilizador(user=user,imagem=image_url)
+        utilizador.save()
+        return utilizador
 
 
 class Saga(models.Model):
@@ -53,7 +59,7 @@ class Publicacao(models.Model):
         GROUP = 'G' , _('Grupo')
         CINEMA = 'C' , _('Cinema')
 
-    permissao = models.CharField(max_length=1,choices=Permissao.choices,default=Permissao.TODOS)
+    permissao = models.CharField(max_length=1,choices=Permissao.choices,default=Permissao.EVERYONE)
     parent = models.ForeignKey('self', models.SET_NULL,blank=True,null=True)
     data_publicacao = models.DateTimeField(auto_now_add=True)
     texto = models.CharField(max_length=1000)#TODO Mayeb use models.TextField() instead

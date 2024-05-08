@@ -8,6 +8,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
 # Create your views here.
 def index(request):
     return HttpResponse("Pagina de entrada da app votacao.")
