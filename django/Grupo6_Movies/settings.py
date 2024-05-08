@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-#TODO FUTURE: Will be used for static folder.
-# import os
+#Used for static folder.
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-w6&ue5dik^vukldu=hialh*l^uqvrm+n$q3x25-bbbf_l#9nug
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.216', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -44,10 +44,10 @@ INSTALLED_APPS = [
     #Allow models to be used in app movies
     'movies.apps.MoviesConfig',
 
-    #TODO FUTURE: Will be used to connect with react
-    # 'rest_framework',
-    # 'corsheaders',
-    # 'rest_framework.authtoken',
+    #Used to connect with react
+    'rest_framework',
+    'corsheaders',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -59,8 +59,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    #TODO FUTURE: Will be used to connect with react
-    # 'corsheaders.middleware.CorsMiddleware',
+    #Used to connect with react
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'Grupo6_Movies.urls'
@@ -136,9 +137,10 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#TODO FUTURE: Will be used for static folder access.
-# MEDIA_URL = '/votacao/static/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR,'votacao/static/media')
+#Used for static folder access.
+MEDIA_URL = '/movies/static/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'movies/static/media')
 
-#TODO FUTURE: Will be used for react connection.
-# CORS_ALLOW_ALL_ORIGINS = True
+#Used for react connection.
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
