@@ -9,6 +9,7 @@ function Autentication({ username, setUsername, isAutenticated, setIsAutenticate
     const [password, setPassword] = useState('');
     const [msg, setMsg] = useState('');
     const [error, setError] = useState('');
+    const [img,setImg] = useState('')
 
     const handleLogout = () => {
         setIsAutenticated(false)
@@ -33,6 +34,7 @@ function Autentication({ username, setUsername, isAutenticated, setIsAutenticate
                 // Guarda o token para invocações futuras durante a sessão
                 localStorage.setItem('token', data.token);
                 // Imprime msg de sucesso ou redireciona
+                setImg(data.image)
                 setMsg('Viva, fez login !');
                 setIsAutenticated(true)
             } else {
@@ -53,6 +55,7 @@ function Autentication({ username, setUsername, isAutenticated, setIsAutenticate
                     <span style={{ fontWeight: "bold" }}>Username: </span>
                     {username}
                 </div>
+                <img src={img}width={"10%"}/>
                 <button onClick={handleLogout}>Logout</button>
             </div>
         )
