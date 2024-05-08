@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-#TODO FUTURE: Will be used for static folder.
-# import os
+#Used for static folder.
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -139,9 +139,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#TODO FUTURE: Will be used for static folder access.
-# MEDIA_URL = '/votacao/static/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR,'votacao/static/media')
+#Used for static folder access.
+MEDIA_URL = '/movies/static/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'movies/static/media')
 
 #Used for react connection.
 CORS_ALLOW_ALL_ORIGINS = True
