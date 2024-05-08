@@ -17,12 +17,20 @@ class Utilizador(models.Model):
     imagem = models.CharField(max_length=200,default="NO_USER_IMAGE")
 
     def create(username,password,email,imagem):
-        #TODO delete partial user if anything fails
-        user = User.objects.create_user(username=username,password=password,email=email)
+        try:
+            user = User.objects.create_user(username=username,password=password,email=email)
+        except Exception as e:
+            print(e)
+            return
 
-        fs = FileSystemStorage()
-        filename = fs.save(imagem.name, imagem)
-        image_url = fs.url(filename)
+        try:
+            fs = FileSystemStorage()
+            filename = fs.save("user_images/"+imagem.name, imagem)
+            image_url = fs.url(filename)
+        except Exception as e:
+            user.delete()
+            print(e)
+            return
 
         utilizador = Utilizador(user=user,imagem=image_url)
         utilizador.save()
@@ -43,6 +51,20 @@ class Filme(models.Model):
     imagem = models.CharField(max_length=200,default="NO_MOVIE_IMAGE")
     data_publicacao = models.DateField()#Não precisa de ser DateTime porque não tem time.
 
+    def create(nome,genre,saga,duracao,imagem,data_publicacao):
+
+        try:
+            fs = FileSystemStorage()
+            filename = fs.save("movie_images/"+imagem.name, imagem)
+            image_url = fs.url(filename)
+        except Exception as e:
+            print(e)
+            return
+
+        filme = Filme(nome=nome,genre=genre,saga=saga,duracao=duracao,imagem=image_url,data_publicacao=data_publicacao)
+        filme.save()
+        return filme
+
 class Cinema(models.Model):
     localizacao = models.CharField(max_length=200)
     administrador = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)#Cinemas sem administrador ficam a null.
@@ -51,6 +73,22 @@ class Grupo(models.Model):
     data_criacao = models.DateTimeField(auto_now_add=True)
     nome = models.CharField(max_length=100)
     imagem = models.CharField(max_length=200,default="NO_GROUP_IMAGE")
+
+    def get_last_message(grupo):
+        return Mensagem.objects.filter(grupo=grupo).order_by("timestamp").last()
+
+    def create(nome,imagem):
+
+        try:
+            fs = FileSystemStorage()
+            filename = fs.save("group_images/"+imagem.name, imagem)
+            image_url = fs.url(filename)
+        except Exception as e:
+            print(e)
+            return
+        group = Grupo(nome=nome,imagem=image_url)
+        group.save()
+        return group
 
 class Publicacao(models.Model):
 

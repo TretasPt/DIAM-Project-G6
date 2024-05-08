@@ -22,6 +22,7 @@ def databaseTest(request):
     for user in Utilizador.objects.all():
         output+= "<li> <ul> <li>Username:"+user.user.username+"</li>\n"
         output+= "<li>Email:" + user.user.email + "</li>\n"
+        output+= "<li>Imagem: <a href='"  + user.imagem + "'>"+user.imagem+"</a> </li>\n"
         output+= "<li>Data de adesão:" + str(user.data_adesao)+"</li></ul></li>\n"
     output +="</ul></li>\n"
 
@@ -41,7 +42,8 @@ def databaseTest(request):
         output+= "<li>Genero:" + (filme.genre.nome if filme.genre else "Não definido") + "</li>\n"
         output+= "<li>Saga:" + (filme.saga.nome if filme.saga else "Não definido") + "</li>\n"
         output+= "<li>Duracao:" + str(filme.duracao) + "</li>\n"
-        output+= "<li>Imagem:" + filme.imagem + "</li>\n"
+        output+= "<li>Imagem: <a href='" + filme.imagem + "'>"+filme.imagem+"</a> </li>\n"
+
         output+= "<li>Data de publicacao:" + str(filme.data_publicacao)+"</li></ul></li>\n"
     output +="</ul></li>\n"
 
@@ -55,7 +57,8 @@ def databaseTest(request):
     for grupo in Grupo.objects.all():
         output+= "<li> <ul> <li>Nome:"+grupo.nome+"</li>\n"
         output+= "<li>Data de criação:" + str(grupo.data_criacao) + "</li>\n"
-        output+= "<li>Imagem:" + grupo.imagem+"</li></ul></li>\n"
+        output+= "<li>Imagem: <a href='" + grupo.imagem + "'>"+grupo.imagem+"</a> </li></ul></li>\n"
+
     output +="</ul></li>\n"
 
     output += "<li>Publicacao<ul>\n"
