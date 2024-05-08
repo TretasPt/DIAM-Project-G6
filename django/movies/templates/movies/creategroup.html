@@ -1,0 +1,14 @@
+{% extends 'movies/base.html' %}
+
+{% block main %}
+    <form class="userform" method="post" action="{% url 'movies:creategroup' %}">
+        {% csrf_token %}
+        <section class="formfield">
+            <label for="LoginUsername">Nome:</label>
+            <input id="LoginUsername" type="text" name="username" required/>
+        </section>
+        <input type="submit" value="Criar">
+    </form>
+{% endblock %}
+
+{% block aside %}{% endblock %}

@@ -6,6 +6,7 @@ urlpatterns = [
  path("", views.index, name="index"),
  path("register", views.registerUser, name="register"),
  path("login", views.loginUser, name="login"),
- path("group", views.group, name="group"),
+ path("creategroup", views.creategroup, name="creategroup"),
+ path("<int:group_id>/group", views.group, name="group"),
  path("test", views.databaseTest, name="databaseTest"),
 ]

@@ -214,6 +214,10 @@ header {
     pointer-events: none;
 }
 
+#creategroupbox {
+    height: 10vh;
+}
+
 #noaside {
     width: 7vw;
 }

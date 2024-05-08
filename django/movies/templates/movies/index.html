@@ -4,9 +4,6 @@
 
 {% block main_content %}
     <section class="scrollbox">
-        {% block nested %}
-            {{ block.super }}
-        {% endblock %}
         {% if publicacoes_list %}
             {% for publicacao in publicacoes_list %}
                 <section class="postbox">
@@ -27,39 +24,16 @@
 {% endblock %}
 
 {% block aside_content %}
-    <section id="createpostbox" class="socialbox">
-        Post<br><br><br><br><br><br><br><br><br><br>
-    </section>
-    <section class="socialbox groupbox">
-        <section class="scroll">
-            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-        </section>
-    </section>
-    <section class="socialbox groupbox">
-        <section class="scroll">
-            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-        </section>
-    </section>
-    <section class="socialbox groupbox">
-        <section class="scroll">
-            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-        </section>
-    </section>
-    <section class="socialbox groupbox">
-        <section class="scroll">
-            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-        </section>
-    </section>
-    <section class="socialbox groupbox">
-        <section class="scroll">
-            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-        </section>
-    </section>
-    <section class="socialbox groupbox">
-        <section class="scroll">
-            Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>Chat<br><br>
-        </section>
-    </section>
+    <a id="creategroupbox" class="socialbox" href="{% url 'movies:creategroup' %}">Create Group</a>
+    {% if grupos_list %}
+        {% for grupo in grupos_list %}
+            <a class="socialbox groupbox">
+                <section class="scroll">
+                    {{ grupo.nome }}
+                </section>
+            </a>
+        {% endfor %}
+    {% endif %}
     <section id="dontknowbox" class="socialbox">
         Filmes nos cinamas locais (Com setas à esquerda e direita para ver a lista de filmes)
     </section>

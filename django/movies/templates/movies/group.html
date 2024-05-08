@@ -18,7 +18,8 @@
     <section class="diaphragm">
     </section>
     <form class="messageinput_section">
-        <input class="messageinput"/>
+        {% csrf_token %}
+        <input id="messageinput" class="messageinput" name="messageinput"/>
         <input type="submit" hidden/>
     </form>
 {% endblock %}
