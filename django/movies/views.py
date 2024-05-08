@@ -193,8 +193,8 @@ def escolhas(request):
 
     def addFields(escolha_filme):
         filme = FilmeSerializer(Filme.objects.get(id=escolha_filme['filme'])).data
-        filme['genre']= Genre.objects.get(id=filme['genre']).nome#TODO handle movies without genre
-        filme['saga']= Saga.objects.get(id=filme['saga']).nome#TODO handle movies without saga
+        filme['genre'] = Genre.objects.get(id=filme['genre']).nome if Genre.objects.filter(id=filme['genre']).first() is not None else None
+        filme['saga'] = Saga.objects.get(id=filme['saga']).nome if Saga.objects.filter(id=filme['saga']).first() is not None else None
         escolha_filme['filme'] = filme
         votos = Voto.objects.filter(voto=escolha_filme['pk'])
         count = len(votos)
