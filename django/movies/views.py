@@ -1,3 +1,5 @@
+from django.utils import timezone
+from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
@@ -25,15 +27,12 @@ def index(request):
     }
     if (request.user.is_authenticated):
         utilizador = Utilizador.objects.get(user=request.user)
-        utilizadoresGrupos = UtilizadorGrupo.objects.filter(utilizador=utilizador)
-        groups_list = Grupo.objects.filter(
-            id__in=Mensagem.objects\
-                .filter(grupo__in=utilizadoresGrupos.values('grupo'))\
-                .order_by('timestamp')\
-                .values('grupo')\
-                .distinct()\
-                [:6]
-        )
+        groups_list = Mensagem.objects\
+            .filter(grupo__utilizadorgrupo__utilizador=utilizador)\
+            .order_by('timestamp')\
+            .values('grupo_id')\
+            .distinct()
+        groups_list = Grupo.objects.filter(id__in=groups_list)
         context['grupos_list'] = groups_list
     return render(request, 'movies/index.html', context)
 
@@ -77,24 +76,43 @@ def loginUser(request):
 @login_required(login_url=reverse_lazy('votacao:loginUser'))
 def createGroup(request):
     if request.method == 'POST':
-        group = Grupo.create(request.POST.get('groupname'))
-        group.save()
-        return HttpResponseRedirect(reverse('movies:' + group.id + '/group', args=()))
+        utilizador = Utilizador.objects.get(user=request.user)
+        grupo = Grupo(
+            nome=request.POST.get('groupname'),
+            data_criacao=timezone.now()
+        )
+        utilizadorGrupo = UtilizadorGrupo(
+            utilizador=utilizador,
+            grupo=grupo,
+            administrador=True,
+            convite_por_aceitar=False,
+            date_joined=timezone.now()
+        )
+        grupo.save()
+        utilizadorGrupo.save()
+        return HttpResponseRedirect(reverse('movies:group', args=(grupo.id,)))
     else:
         return render(request, 'movies/createGroup.html')
 
+@login_required(login_url=reverse_lazy('votacao:loginUser'))
 def group(request, group_id):
     if request.method == 'POST':
         message = request.POST.get('messageinput')
     else:
-        grupo_name = Grupo.objects.get(pk=group_id).nome
-        mensagens_list = Mensagem.objects\
-            .filter(grupo=Grupo.objects.get(pk=group_id))\
-            .order_by('-timestamp')  # [:5]  TODO
-        return render(request, 'movies/group.html', {
-            'mensagens_list': mensagens_list,
-            'group_name': grupo_name
-        })
+        context = {}
+        utilizador = Utilizador.objects.get(user=request.user)
+        groups_list = Grupo.objects.filter(utilizadorgrupo__utilizador=utilizador)
+        if group_id == 0:
+            context['no_messages'] = True
+        else:
+            group_name = Grupo.objects.get(pk=group_id).nome
+            messages_list = Mensagem.objects \
+                .filter(grupo_id=group_id) \
+                .order_by('-timestamp')  # [:5]  TODO
+            context['group_name'] = group_name
+            context['messages_list'] = messages_list
+        context['groups_list'] = groups_list
+        return render(request, 'movies/group.html', context)
 
 def getRecentGroupsList(user):
     recentgroups_list = Grupo.objects.filter(Utilizador.objects.get(

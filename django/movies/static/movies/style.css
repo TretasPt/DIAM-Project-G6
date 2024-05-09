@@ -55,7 +55,7 @@ header {
     border-radius: 5px;
     text-align: center;
     transition: 0.2s;
-    width: 70%;
+
     margin: 2vh auto 1vh auto;
     width: 40px;
     height: 40px;
@@ -88,7 +88,7 @@ header {
 
 .groupbox {
     height: 5.12vh;
-    transition: 0.4s;
+    transition: 0.7s;
 }
 
 .groupbox:hover {

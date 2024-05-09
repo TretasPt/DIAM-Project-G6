@@ -18,7 +18,7 @@
                 <a class="navbutton" href="{% url 'movies:index' %}"></a>
                 <a class="navbutton" href="{% url 'movies:registerUser' %}"></a>
                 <a class="navbutton" href="{% url 'movies:loginUser' %}"></a>
-                <a class="navbutton"></a>
+                <a class="navbutton" href="{% url 'movies:group' 0 %}"></a>
             </nav>
             {% block main %}
                 <!--Main Block-->
