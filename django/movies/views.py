@@ -232,7 +232,7 @@ def login(request):
     user = authenticate(username=username, password=password)
     if user:
         token, _ = Token.objects.get_or_create(user=user)
-        return JsonResponse({'token': token.key})
+        return JsonResponse({'token': token.key,'image':user.utilizador.imagem})
     else:
         return JsonResponse({'error': 'Credenciais inválidas'}, status=400)
 
@@ -279,16 +279,16 @@ def escolhas(request):
     escolhas = EscolhaFilme.objects.filter(evento__id=evento)
     serializer = EscolhaFilmeSerializer(escolhas,many=True)
 
-    def addFields(ef):
-        filme = FilmeSerializer(Filme.objects.get(id=ef['filme'])).data
-        filme['genre']= Genre.objects.get(id=filme['genre']).nome#TODO handle movies without genre
-        filme['saga']= Saga.objects.get(id=filme['saga']).nome#TODO handle movies without saga
-        ef['filme'] = filme
-        votos = Voto.objects.filter(voto=ef['pk'])
+    def addFields(escolha_filme):
+        filme = FilmeSerializer(Filme.objects.get(id=escolha_filme['filme'])).data
+        filme['genre'] = Genre.objects.get(id=filme['genre']).nome if Genre.objects.filter(id=filme['genre']).first() is not None else None
+        filme['saga'] = Saga.objects.get(id=filme['saga']).nome if Saga.objects.filter(id=filme['saga']).first() is not None else None
+        escolha_filme['filme'] = filme
+        votos = Voto.objects.filter(voto=escolha_filme['pk'])
         count = len(votos)
         user_voted = len(votos.filter(utilizador=user)) >0
-        ef['votos'] = {'count':count,'user_voted':user_voted}
-        return ef
+        escolha_filme['votos'] = {'count':count,'user_voted':user_voted}
+        return escolha_filme
     res = list(map(addFields, serializer.data))
     return Response(res)
 
