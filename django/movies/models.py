@@ -1,12 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
-# from django.utils import timezone
-# import datetime
 from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
-# from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
+from django.utils import timezone
 
 class Utilizador(models.Model):
     #Nome é parte do user
@@ -75,13 +72,14 @@ class Grupo(models.Model):
     data_criacao = models.DateTimeField(auto_now_add=True)
     nome = models.CharField(max_length=100)
     imagem = models.CharField(max_length=200,default="NO_GROUP_IMAGE.png")
+    publico = models.BooleanField(default=False)
 
     def get_last_message(grupo):
         return Mensagem.objects.filter(grupo=grupo).order_by("timestamp").last()
 
-    def create(nome,imagem=None):
+    def create(nome,publico=False,imagem=None):
         if(imagem is None):
-            group = Grupo(nome=nome)
+            group = Grupo(nome=nome,publico=publico)
         else:
             try:
                 fs = FileSystemStorage()
@@ -90,7 +88,7 @@ class Grupo(models.Model):
             except Exception as e:
                 print(e)
                 return
-            group = Grupo(nome=nome,imagem=image_url)
+            group = Grupo(nome=nome,imagem=image_url,publico=publico)
 
         group.save()
         return group
@@ -112,6 +110,8 @@ class Publicacao(models.Model):
     timestamp_inicio = models.TimeField(blank=True,null=True)
     timestamp_fim = models.TimeField(blank=True,null=True)
     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
+    destaque = models.BooleanField(default=False)
+
 
 class Mensagem(models.Model):
     sender = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)
@@ -159,8 +159,26 @@ class UtilizadorGrupo(models.Model):
     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
     grupo = models.ForeignKey(Grupo, models.CASCADE)
     administrador = models.BooleanField(default=False)
-    convite_por_aceitar = models.BooleanField(default=True)
     date_joined = models.DateTimeField(null=True)#Para eleger o proximo admin em caso de saida. Pode ser null se ainda não tiver aceite o convite
+    convite_por_aceitar_user = models.BooleanField(default=True)
+    convite_por_aceitar_grupo = models.BooleanField(default=True)
+
+    def accept_invitation(self):
+        self.convite_por_aceitar_user=False
+        self.date_joined=timezone.now()
+        self.save()
+    def accept_join_request(self):
+        self.convite_por_aceitar_grupo=False
+        self.date_joined=timezone.now()
+        self.save()
+    def grupo_invite_user(grupo,utilizador):#convite_por_aceitar_grupo=False,convite_por_aceitar_user=True
+        ug = UtilizadorGrupo(utilizador=utilizador,grupo=grupo,convite_por_aceitar_grupo=False)
+        ug.save()
+        return ug
+    def user_request_join_group(utilizador,grupo):#convite_por_aceitar_grupo=True,convite_por_aceitar_user=False
+        ug = UtilizadorGrupo(utilizador=utilizador,grupo=grupo,convite_por_aceitar_user=False)
+        ug.save()
+        return ug
 
 class UtilizadorCinema(models.Model):
     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
