@@ -1,3 +1,10 @@
+from django.utils import timezone
+from django.db.models import Q
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
 from .models import *
 from .serializers import *
 from django.contrib.auth import authenticate
@@ -11,9 +18,112 @@ from rest_framework.response import Response
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
-# Create your views here.
 def index(request):
-    return HttpResponse("Pagina de entrada da app votacao.")
+    publicacoes_list = Publicacao.objects.order_by('-data_publicacao')#[:5] #TODO
+    if (not request.user.is_authenticated):
+        publicacoes_list = publicacoes_list.filter(permissao='T')
+    context = {
+        'publicacoes_list': publicacoes_list
+    }
+    if (request.user.is_authenticated):
+        utilizador = Utilizador.objects.get(user=request.user)
+        groups_list = Mensagem.objects\
+            .filter(grupo__utilizadorgrupo__utilizador=utilizador)\
+            .order_by('timestamp')\
+            .values('grupo_id')\
+            .distinct()
+        groups_list = Grupo.objects.filter(id__in=groups_list)
+        context['grupos_list'] = groups_list
+    return render(request, 'movies/index.html', context)
+
+def registerUser(request):
+    if request.method == 'POST':
+        user = User.objects.create_user(
+            username=request.POST['username'],
+            email=request.POST['email'],
+            password=request.POST['password'],
+        )
+        utilizador = Utilizador(
+            user=user,
+        )
+        utilizador.save()
+        return HttpResponseRedirect(reverse('movies:index'))
+    else:
+        return render(request, 'movies/register.html')
+
+def loginUser(request):
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(
+                username=username,
+                password=password
+            )
+        except KeyError:
+            return render(request, 'movies/login.html')
+        if user:
+            login(request, user)
+            print("TODO - set profile image") #TODO - set profile image
+            return HttpResponseRedirect(reverse('movies:index'))
+        else:
+            return render(request, 'movies/login.html', {
+                'error_message': 'Falha de login'
+            })
+    else:
+        return render(request, 'movies/login.html')
+
+@login_required(login_url=reverse_lazy('votacao:loginUser'))
+def createGroup(request):
+    if request.method == 'POST':
+        utilizador = Utilizador.objects.get(user=request.user)
+        grupo = Grupo(
+            nome=request.POST.get('groupname'),
+            data_criacao=timezone.now()
+        )
+        utilizadorGrupo = UtilizadorGrupo(
+            utilizador=utilizador,
+            grupo=grupo,
+            administrador=True,
+            convite_por_aceitar=False,
+            date_joined=timezone.now()
+        )
+        grupo.save()
+        utilizadorGrupo.save()
+        return HttpResponseRedirect(reverse('movies:group', args=(grupo.id,)))
+    else:
+        return render(request, 'movies/createGroup.html')
+
+@login_required(login_url=reverse_lazy('votacao:loginUser'))
+def group(request, group_id):
+    if request.method == 'POST':
+        message = request.POST.get('messageinput')
+    else:
+        context = {}
+        utilizador = Utilizador.objects.get(user=request.user)
+        groups_list = Grupo.objects.filter(utilizadorgrupo__utilizador=utilizador)
+        if group_id == 0:
+            context['no_messages'] = True
+        else:
+            group_name = Grupo.objects.get(pk=group_id).nome
+            messages_list = Mensagem.objects \
+                .filter(grupo_id=group_id) \
+                .order_by('-timestamp')  # [:5]  TODO
+            context['group_name'] = group_name
+            context['messages_list'] = messages_list
+        context['groups_list'] = groups_list
+        return render(request, 'movies/group.html', context)
+
+def getRecentGroupsList(user):
+    recentgroups_list = Grupo.objects.filter(Utilizador.objects.get(
+        user=user
+    )).order_by('last_message_timestamp')
+    return recentgroups_list
+
+
+
+
+
 
 def databaseTest(request):
     output = "<h1>DATABASE DUMP</h1>\n<ul>\n"
@@ -130,7 +240,6 @@ def databaseTest(request):
         output+= "<li>Cinema:" + uc.cinema.localizacao +"</li></ul></li>\n"
     output +="</ul></li>\n"
 
-
     output += "</ul>\n"
     return HttpResponse(output)
 
@@ -144,9 +253,6 @@ def login(request):
         return JsonResponse({'token': token.key,'image':user.utilizador.imagem})
     else:
         return JsonResponse({'error': 'Credenciais inválidas'}, status=400)
-
-
-
 
 @api_view(['POST'])
 def grupos(request):
@@ -182,7 +288,7 @@ def escolhas(request):
     evento = request.data.get("evento")
     if(username==None or token==None or evento == None):
         return Response({'error':"Not enough arguments passed. Expected username,token and evento."},status=status.HTTP_400_BAD_REQUEST)
-    
+
     try:
         user = Utilizador.objects.get(user__username=username)
     except Utilizador.DoesNotExist:

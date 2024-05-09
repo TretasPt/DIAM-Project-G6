@@ -96,7 +96,6 @@ class Grupo(models.Model):
         return group
 
 class Publicacao(models.Model):
-
     class Permissao(models.TextChoices):
         EVERYONE = 'T' , _('Todos')
         GROUP = 'G' , _('Grupo')

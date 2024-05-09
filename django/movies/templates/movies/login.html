@@ -1,0 +1,18 @@
+{% extends 'movies/userform.html' %}
+
+{% block main %}
+    <form class="userform" method="post" action="{% url 'movies:loginUser' %}">
+        {% csrf_token %}
+        <section class="formfield">
+            <label for="LoginUsername">Username:</label>
+            <input id="LoginUsername" type="text" name="username" required/>
+        </section>
+        <section class="formfield">
+            <label for="LoginPassword">Password:</label>
+            <input id="LoginPassword" type="password" name="password" required/>
+        </section>
+        <input type="submit" value="Login">
+    </form>
+{% endblock %}
+
+{% block aside %}{% endblock %}

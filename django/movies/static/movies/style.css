@@ -1,0 +1,261 @@
+body {
+    background-color: #8a334a;
+}
+
+header {
+    padding: 20px;
+}
+
+.wipe {
+    height: 90%;
+    display: block;
+    margin: auto;
+    overflow: hidden;
+}
+
+.scrollbox {
+    height: calc(100% - 40px);
+    margin-top: 20px;
+    overflow: auto;
+}
+
+.postbox {
+    height: 300px;
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #d1d1d1;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.posttopic {
+    width: 25%;
+    background-color: #8a334a;
+}
+
+.postcontent {
+    flex: 1;
+    margin-right: 0;
+    padding: 20px;
+    line-height: 30px;
+    text-align: justify;
+}
+
+.navbutton {
+    background-color: gainsboro;
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    transition: 0.2s;
+
+    margin: 2vh auto 1vh auto;
+    width: 40px;
+    height: 40px;
+}
+
+.navbutton:hover {
+    background-color: grey;
+    width: 45px;
+    height: 45px;
+}
+
+.personalpanel {
+    width: 7vw;
+    height: 98vh;
+    background-color: #8a334a;
+    display: flex;
+    flex-direction: column;
+}
+
+.socialbox {
+    background-color: gainsboro;
+    border-radius: 5px;
+    display: block;
+    width: 85%;
+    float: left;
+    margin-left: 5%;
+    margin-bottom: 2vh;
+    overflow: hidden;
+}
+
+.groupbox {
+    height: 5.12vh;
+    transition: 0.7s;
+}
+
+.groupbox:hover {
+    height: 30vh;
+}
+
+.scroll {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    text-align: justify;
+    scrollbar-color: #8a334a gainsboro;
+}
+
+.userform {
+    width: 40%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.formfield {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    margin: 10px 0px 10px 0px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.formfield > input {
+    height: 30px;
+    border-radius: 5px;
+    border-color: inherit;
+}
+
+.formfield > label {
+    display: flex;
+    align-items: center;
+}
+
+.message {
+    margin:20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.messageprofileimgcropper {
+    width: 2.5vw;
+    height: 2.5vw;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.messagetext {
+    width: 80%;
+}
+
+.messageinput {
+    width: 100%;
+    height: 100%;
+    border: none;
+    font-size: 15px;
+}
+
+.diaphragm {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.messageinput_section {
+    height: 50px;
+    background-color: red;
+}
+
+/* Layout 1 */
+.layout1_main {
+    flex: 1;
+    margin-right: 0;
+    height:98vh;
+    background-color: gainsboro;
+    scrollbar-color: #8a334a gainsboro;
+    overflow: hidden;
+    border-radius: 5px;
+}
+.layout1_aside {
+    height: 98vh;
+    width: 30vw;
+    background-color: #8a334a;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Layout 2 */
+.layout2_main {
+    flex: 1;
+    margin-right: 0;
+    height:98vh;
+    background-color: gainsboro;
+    scrollbar-color: #8a334a gainsboro;
+    overflow: hidden;
+    border-radius: 5px;
+
+
+    display: flex;
+    flex-direction: column;
+}
+.layout2_aside {
+    height: 98vh;
+    width: 30vw;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.layout2_aside_fade {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    overflow: hidden;
+    background: linear-gradient(to bottom, rgba(138,51,74,0) 95%, rgba(138,51,74,0));
+    pointer-events: none;
+}
+
+#creategroupbox {
+    height: 10vh;
+}
+
+#noaside {
+    width: 7vw;
+}
+
+#fixedcontent {
+    display: flex;
+    flex-direction: row;
+    grid-template-columns: 7vw 63vw 30vw;
+}
+
+#profileimgcropper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: 0.2s;
+    overflow: hidden;
+}
+
+#profileimgcropper:hover {
+    width: 60px;
+    height: 60px;
+}
+
+#profileimg {
+    width: inherit;
+}
+
+#username {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 1vw;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+#dontknowbox {
+    flex: 1;
+    margin-bottom: 0;
+}

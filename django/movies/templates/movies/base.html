@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Index</title>
+        <link rel="stylesheet" href="{% static 'movies/style.css' %}">
+    </head>
+    <body>
+        <section id="fixedcontent">
+            <nav class="personalpanel">
+                <header>
+                    <section id="profileimgcropper">
+                        <img id="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>
+                    </section>
+                </header>
+                <a class="navbutton" href="{% url 'movies:index' %}"></a>
+                <a class="navbutton" href="{% url 'movies:registerUser' %}"></a>
+                <a class="navbutton" href="{% url 'movies:loginUser' %}"></a>
+                <a class="navbutton" href="{% url 'movies:group' 0 %}"></a>
+            </nav>
+            {% block main %}
+                <!--Main Block-->
+            {% endblock %}
+            {% block noaside %}
+                <section id="noaside"></section>
+            {% endblock %}
+            {% block aside %}
+                <!--Aside Block-->
+            {% endblock %}
+        </section>
+        <footer>
+
+        </footer>
+    </body>
+</html>
