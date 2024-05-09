@@ -35,7 +35,6 @@ class Utilizador(models.Model):
         utilizador.save()
         return utilizador
 
-
 class Saga(models.Model):
     nome = models.CharField(max_length=100)
 
@@ -111,7 +110,6 @@ class Publicacao(models.Model):
     timestamp_fim = models.TimeField(blank=True,null=True)
     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
     destaque = models.BooleanField(default=False)
-
 
 class Mensagem(models.Model):
     sender = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)

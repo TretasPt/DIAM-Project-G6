@@ -43,7 +43,6 @@ def databaseTest(request):
         output+= "<li>Saga:" + (filme.saga.nome if filme.saga else "Não definido") + "</li>\n"
         output+= "<li>Duracao:" + str(filme.duracao) + "</li>\n"
         output+= "<li>Imagem: <a href='" + filme.imagem + "'>"+filme.imagem+"</a> </li>\n"
-
         output+= "<li>Data de publicacao:" + str(filme.data_publicacao)+"</li></ul></li>\n"
     output +="</ul></li>\n"
 
@@ -57,6 +56,7 @@ def databaseTest(request):
     for grupo in Grupo.objects.all():
         output+= "<li> <ul> <li>Nome:"+grupo.nome+"</li>\n"
         output+= "<li>Data de criação:" + str(grupo.data_criacao) + "</li>\n"
+        output+= "<li>É publico:" + str(grupo.publico) + "</li>\n"
         output+= "<li>Imagem: <a href='" + grupo.imagem + "'>"+grupo.imagem+"</a> </li></ul></li>\n"
 
     output +="</ul></li>\n"
@@ -64,6 +64,7 @@ def databaseTest(request):
     output += "<li>Publicacao<ul>\n"
     for pub in Publicacao.objects.all():
         output+= "<li> <ul> <li>Utilizador:"+pub.utilizador.user.username+"</li>\n"
+        output+= "<li>Destaque?:" + str(pub.destaque) + "</li>\n"
         output+= "<li>Permissão:"+pub.permissao+"</li>\n"
         output+= "<li>Parent:" + (str(pub.parent) if pub.parent else "Não definido") + "</li>\n"
         output+= "<li>Data de publicação:" + str(pub.data_publicacao) + "</li>\n"
@@ -118,7 +119,8 @@ def databaseTest(request):
     output += "<li>UtilizadorGrupo<ul>\n"
     for ug in UtilizadorGrupo.objects.all():
         output+= "<li> <ul> <li>Administrador:"+ str(ug.administrador) +"</li>\n"
-        output+= "<li>Convite por aceitar:" + str(ug.convite_por_aceitar) + "</li>\n"
+        output+= "<li>Convite por aceitar user:" + str(ug.convite_por_aceitar_user) + "</li>\n"
+        output+= "<li>Convite por aceitar grupo:" + str(ug.convite_por_aceitar_grupo) + "</li>\n"
         output+= "<li>Data de adesão:" + str(ug.date_joined) + "</li>\n"
         output+= "<li>Utilizador:" + ug.utilizador.user.username + "</li>\n"
         output+= "<li>Grupo:" + ug.grupo.nome +"</li></ul></li>\n"
@@ -146,8 +148,6 @@ def login(request):
         return JsonResponse({'error': 'Credenciais inválidas'}, status=400)
 
 
-
-
 @api_view(['POST'])
 def grupos(request):
     username = request.data.get('username')
@@ -159,7 +159,7 @@ def grupos(request):
     except Utilizador.DoesNotExist:
         return Response({'error':"Couldn't find user."},status=status.HTTP_400_BAD_REQUEST)
 
-    groups_of_user = UtilizadorGrupo.objects.filter(convite_por_aceitar=False,utilizador=user).values("grupo")
+    groups_of_user = UtilizadorGrupo.objects.filter(utilizador=user,convite_por_aceitar_user=False,convite_por_aceitar_grupo=False).values("grupo")
     groups = Grupo.objects.filter(id__in=groups_of_user)
     serializer = GrupoSerializer(groups,many=True)
     return Response(serializer.data)
