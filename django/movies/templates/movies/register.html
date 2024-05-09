@@ -1,7 +1,7 @@
 {% extends 'movies/base.html' %}
 
 {% block main %}
-    <form class="userform" method="post" action="{% url 'movies:register' %}">
+    <form class="userform" method="post" action="{% url 'movies:registerUser' %}">
         {% csrf_token %}
         <section class="formfield">
             <label for="LoginUsername">Username:</label>

@@ -24,10 +24,10 @@
 {% endblock %}
 
 {% block aside_content %}
-    <a id="creategroupbox" class="socialbox" href="{% url 'movies:creategroup' %}">Create Group</a>
+    <a id="creategroupbox" class="socialbox" href="{% url 'movies:createGroup' %}">Create Group</a>
     {% if grupos_list %}
         {% for grupo in grupos_list %}
-            <a class="socialbox groupbox">
+            <a class="socialbox groupbox" href="{% url 'movies:group' grupo.id %}">
                 <section class="scroll">
                     {{ grupo.nome }}
                 </section>

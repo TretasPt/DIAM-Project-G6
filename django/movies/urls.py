@@ -4,9 +4,9 @@ from . import views
 app_name = 'movies'
 urlpatterns = [
  path("", views.index, name="index"),
- path("register", views.registerUser, name="register"),
- path("login", views.loginUser, name="login"),
- path("creategroup", views.creategroup, name="creategroup"),
+ path("register", views.registerUser, name="registerUser"),
+ path("login", views.loginUser, name="loginUser"),
+ path("creategroup", views.createGroup, name="createGroup"),
  path("<int:group_id>/group", views.group, name="group"),
  
  #Test

@@ -74,20 +74,26 @@ def loginUser(request):
     else:
         return render(request, 'movies/login.html')
 
-@login_required(login_url=reverse_lazy('votacao:loginuser'))
-def creategroup(request):
+@login_required(login_url=reverse_lazy('votacao:loginUser'))
+def createGroup(request):
     if request.method == 'POST':
-        print('')
+        group = Grupo.create(request.POST.get('groupname'))
+        group.save()
+        return HttpResponseRedirect(reverse('movies:' + group.id + '/group', args=()))
     else:
-        return render(request, 'movies/creategroup.html')
+        return render(request, 'movies/createGroup.html')
 
 def group(request, group_id):
     if request.method == 'POST':
         message = request.POST.get('messageinput')
     else:
-        mensagens_list = Mensagem.objects.order_by('-timestamp')  # [:5]  TODO
+        grupo_name = Grupo.objects.get(pk=group_id).nome
+        mensagens_list = Mensagem.objects\
+            .filter(grupo=Grupo.objects.get(pk=group_id))\
+            .order_by('-timestamp')  # [:5]  TODO
         return render(request, 'movies/group.html', {
-            'mensagens_list': mensagens_list
+            'mensagens_list': mensagens_list,
+            'group_name': grupo_name
         })
 
 def getRecentGroupsList(user):
@@ -264,7 +270,7 @@ def escolhas(request):
     evento = request.data.get("evento")
     if(username==None or token==None or evento == None):
         return Response({'error':"Not enough arguments passed. Expected username,token and evento."},status=status.HTTP_400_BAD_REQUEST)
-    
+
     try:
         user = Utilizador.objects.get(user__username=username)
     except Utilizador.DoesNotExist:
