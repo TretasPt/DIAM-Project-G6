@@ -6,7 +6,7 @@ urlpatterns=[
     path("test",views.databaseTest, name="databaseTest"),
     
     #React 
-    path('api/login/', views.login, name='login'),
+    path('api/login/', views.login_api, name='login'),
     path('api/escolhas/', views.escolhas),#POST-Lista de escolhas de um evento
     path('api/eventos/', views.eventos),#POST-Lista de eventos de um grupo
     path('api/grupos/', views.grupos),#POST-Lista de grupos do utilizador

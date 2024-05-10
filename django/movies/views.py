@@ -137,7 +137,7 @@ def databaseTest(request):
     return HttpResponse(output)
 
 @api_view(['POST'])
-def login(request):
+def login_api(request):
     username = request.data.get('username')
     password = request.data.get('password')
     user = authenticate(username=username, password=password)
