@@ -1,0 +1,40 @@
+{% extends 'movies/layout1.html' %}
+
+{% load static %}
+
+{% block main_content %}
+    <section class="scrollbox">
+        {% if publicacoes_list %}
+            {% for publicacao in publicacoes_list %}
+                <section class="postbox">
+                    <section class="posttopic">
+                        .
+                        <section class="posttopicimage"></section>
+                        <section class="posttopictitle"></section>
+                    </section>
+                    <section class="postcontent">
+                        <section class="posttext">
+                            {{ publicacao.texto }}
+                        </section>
+                    </section>
+                </section>
+            {% endfor %}
+        {% endif %}
+    </section>
+{% endblock %}
+
+{% block aside_content %}
+    <a id="creategroupbox" class="socialbox" href="{% url 'movies:createGroup' %}">Create Group</a>
+    {% if grupos_list %}
+        {% for grupo in grupos_list %}
+            <a class="socialbox groupbox" href="{% url 'movies:group' grupo.id %}">
+                <section class="scroll">
+                    {{ grupo.nome }}
+                </section>
+            </a>
+        {% endfor %}
+    {% endif %}
+    <section id="dontknowbox" class="socialbox">
+        Filmes nos cinamas locais (Com setas à esquerda e direita para ver a lista de filmes)
+    </section>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'movies/layout2.html' %}
+
+{% load static %}
+
+{% block main_content %}
+    {% if messages_list %}
+        {% for message in messages_list %}
+            <section class="message">
+                <section class="messageprofileimgcropper">
+                    <img id="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>
+                </section>
+                <section class="messagetext">
+                    {{ message.texto }}
+                </section>
+            </section>
+        {% endfor %}
+    {% endif %}
+    <section class="diaphragm">
+    </section>
+    <form class="messageinput_section">
+        {% csrf_token %}
+        <input id="messageinput" class="messageinput" name="messageinput"/>
+        <input type="submit" hidden/>
+    </form>
+{% endblock %}
+
+{% block aside_content %}
+    <a id="creategroupbox" class="socialbox" href="{% url 'movies:createGroup' %}">Create Group</a>
+    {% if groups_list %}
+        {% for group in groups_list %}
+            <a class="socialbox groupbox" href="{% url 'movies:group' group.id %}">
+                <section class="scroll">
+                    {{ group.nome }}
+                </section>
+            </a>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block noaside %}{% endblock %}
