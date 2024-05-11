@@ -5,6 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_POST
+
 from .models import *
 from .serializers import *
 from django.contrib.auth import authenticate
@@ -22,19 +25,16 @@ def index(request):
     publicacoes_list = Publicacao.objects.order_by('-data_publicacao')#[:5] #TODO
     if (not request.user.is_authenticated):
         publicacoes_list = publicacoes_list.filter(permissao='T')
-    context = {
-        'publicacoes_list': publicacoes_list
-    }
-    if (request.user.is_authenticated):
+    else:
         utilizador = Utilizador.objects.get(user=request.user)
-        groups_list = Mensagem.objects\
-            .filter(grupo__utilizadorgrupo__utilizador=utilizador)\
-            .order_by('timestamp')\
-            .values('grupo_id')\
-            .distinct()
-        groups_list = Grupo.objects.filter(id__in=groups_list)
-        context['grupos_list'] = groups_list
-    return render(request, 'movies/index.html', context)
+        publicacoes_list = publicacoes_list.filter(
+            Q(publicacaogrupo__grupo__utilizadorgrupo__utilizador=utilizador)
+            | Q(publicacaocinema__cinema__utilizadorcinema__utilizador=utilizador)
+            | Q(permissao='T')
+        ).distinct()
+    return render(request, 'movies/index.html', {
+        'publicacoes_list': publicacoes_list
+    })
 
 def registerUser(request):
     if request.method == 'POST':
@@ -43,9 +43,7 @@ def registerUser(request):
             email=request.POST['email'],
             password=request.POST['password'],
         )
-        utilizador = Utilizador(
-            user=user,
-        )
+        utilizador = Utilizador(user=user)
         utilizador.save()
         return HttpResponseRedirect(reverse('movies:index'))
     else:
@@ -94,7 +92,7 @@ def createGroup(request):
     else:
         return render(request, 'movies/createGroup.html')
 
-@login_required(login_url=reverse_lazy('votacao:loginUser'))
+@login_required(login_url=reverse_lazy('movies:loginUser'))
 def group(request, group_id):
     if request.method == 'POST':
         message = request.POST.get('messageinput')
@@ -108,22 +106,78 @@ def group(request, group_id):
             group_name = Grupo.objects.get(pk=group_id).nome
             messages_list = Mensagem.objects \
                 .filter(grupo_id=group_id) \
-                .order_by('-timestamp')  # [:5]  TODO
+                .order_by('timestamp')  # [:5]  TODO
             context['group_name'] = group_name
+            context['group_id'] = group_id
             context['messages_list'] = messages_list
         context['groups_list'] = groups_list
         return render(request, 'movies/group.html', context)
 
-def getRecentGroupsList(user):
-    recentgroups_list = Grupo.objects.filter(Utilizador.objects.get(
-        user=user
-    )).order_by('last_message_timestamp')
-    return recentgroups_list
+@login_required(login_url=reverse_lazy('movies:loginUser'))
+def createPost(request):
+    utilizador = Utilizador.objects.get(user=request.user)
+    if request.method == 'POST':
+        publicacao = Publicacao(
+            data_publicacao=timezone.now(),
+            texto=request.POST['text'],
+            utilizador=utilizador,
+            filme=Filme.objects.get(pk=request.POST['film_id'])
+        )
+        publicacao.save()
+        for group_id in request.POST.getlist('groups[]'):
+            publicacaoGrupo = PublicacaoGrupo(
+                publicacao=publicacao,
+                grupo=Grupo.objects.get(pk=group_id)
+            )
+            publicacaoGrupo.save()
+        for cinema_id in request.POST.getlist('cinemas[]'):
+            publicacaoCinema = PublicacaoGrupo(
+                publicacao=publicacao,
+                grupo=Grupo.objects.get(pk=cinema_id)
+            )
+            publicacaoCinema.save()
+        return HttpResponseRedirect(reverse('movies:index'))
+    else:
+        groups_list = Grupo.objects.filter(utilizadorgrupo__utilizador=utilizador)
+        cinemas_list = Cinema.objects.filter(utilizadorcinema__utilizador=utilizador)
+        films_list = Filme.objects.filter(
+            Q(elementolista__lista__grupo__utilizadorgrupo__utilizador=utilizador)
+            | Q(elementolista__lista__utilizador=utilizador)
+        ).distinct()
+        return render(request, 'movies/createpost.html', {
+            'groups_list': groups_list,
+            'cinemas_list': cinemas_list,
+            'films_list': films_list
+        })
 
+@require_POST
+def sendMessage(request):
+    utilizador = Utilizador.objects.get(user=request.user)
+    group = Grupo.objects.get(pk=request.POST['group_id'])
+    message_text = request.POST['message']
+    message = Mensagem(
+        sender=utilizador,
+        grupo=group,
+        timestamp=timezone.now(),
+        texto=message_text
+    )
+    message.save()
+    return JsonResponse({
+        'message_id': 69,
+        'message_text': message_text
+    })
 
-
-
-
+@require_POST
+def receiveMessage(request):
+    #for i in request.POST.getlist('shown_messages_id_list[]'):
+    #    print('RECEIVED ---> ', i)
+    #print('')
+    messages_list = Mensagem.objects\
+        .filter(grupo_id=request.POST['group_id'])\
+        .exclude(id__in=request.POST.getlist('shown_messages_id_list[]'))
+    return JsonResponse({
+        'messages_list': list(messages_list.values('id', 'texto'))
+    })
 
 def databaseTest(request):
     output = "<h1>DATABASE DUMP</h1>\n<ul>\n"
@@ -244,7 +298,7 @@ def databaseTest(request):
     return HttpResponse(output)
 
 @api_view(['POST'])
-def login(request):
+def loginAPI(request):
     username = request.data.get('username')
     password = request.data.get('password')
     user = authenticate(username=username, password=password)

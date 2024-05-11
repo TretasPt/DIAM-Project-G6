@@ -7,6 +7,9 @@ urlpatterns = [
  path("register", views.registerUser, name="registerUser"),
  path("login", views.loginUser, name="loginUser"),
  path("creategroup", views.createGroup, name="createGroup"),
+ path("createpost", views.createPost, name="createPost"),
+ path("sendmessage", views.sendMessage, name="sendMessage"),
+ path("receivemessage", views.receiveMessage, name="receiveMessage"),
  path("<int:group_id>/group", views.group, name="group"),
  
  #Test
