@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BACKEND_PATH } from './constants'
+import { BACKEND_PATH,IMAGES_PATH } from './constants'
 // import axios from "axios"
 import "../css/Tabs.css"
 
@@ -55,7 +55,7 @@ function Autentication({ username, setUsername, isAutenticated, setIsAutenticate
                     <span style={{ fontWeight: "bold" }}>Username: </span>
                     {username}
                 </div>
-                <img alt="No Movie Cover" src={img}width={"10%"}/>
+                <img alt="No Profile Picture" src={IMAGES_PATH+img}width={"10%"}/>
                 <button onClick={handleLogout}>Logout</button>
             </div>
         )

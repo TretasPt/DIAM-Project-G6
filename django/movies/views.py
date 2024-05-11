@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from .models import *
@@ -36,6 +36,7 @@ def index(request):
         context['grupos_list'] = groups_list
     return render(request, 'movies/index.html', context)
 
+@login_required
 def registerUser(request):
     if request.method == 'POST':
         user = User.objects.create_user(
@@ -65,7 +66,13 @@ def loginUser(request):
         if user:
             login(request, user)
             print("TODO - set profile image") #TODO - set profile image
-            return HttpResponseRedirect(reverse('movies:index'))
+            # return HttpResponseRedirect(reverse('movies:index'))
+            # return redirect(request.GET.get('next'))
+            print(request.GET.get("next", "movies:index"))
+            print(request.POST.get('next', "movies:index"))
+
+            next_url = request.POST.get("next", "movies:index")
+            return redirect(next_url)
         else:
             return render(request, 'movies/login.html', {
                 'error_message': 'Falha de login'
@@ -73,12 +80,12 @@ def loginUser(request):
     else:
         return render(request, 'movies/login.html')
 
-@login_required(login_url=reverse_lazy('movies:loginUser'))
+@login_required
 def logoutUser (request):
     logout(request)
     return HttpResponseRedirect(reverse('movies:index'))
 
-@login_required(login_url=reverse_lazy('movies:loginUser'))
+@login_required
 def createGroup(request):
     if request.method == 'POST':
         utilizador = Utilizador.objects.get(user=request.user)
@@ -99,7 +106,7 @@ def createGroup(request):
     else:
         return render(request, 'movies/createGroup.html')
 
-@login_required(login_url=reverse_lazy('movies:loginUser'))
+@login_required
 def group(request, group_id):
     if request.method == 'POST':
         message = request.POST.get('messageinput')
@@ -125,7 +132,7 @@ def getRecentGroupsList(user):
     )).order_by('last_message_timestamp')
     return recentgroups_list
 
-@login_required(login_url=reverse_lazy('movies:loginUser'))
+@login_required
 def listGroups(request):
     pass
 

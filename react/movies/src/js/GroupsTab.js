@@ -2,7 +2,7 @@ import TabHeader from './TabHeader';
 import "../css/Tabs.css"
 import { useEffect, useState } from 'react';
 import axios from "axios"
-import { BACKEND_PATH } from './constants'
+import { BACKEND_PATH, IMAGES_PATH } from './constants'
 
 
 function GroupTab({ tab, setTab, username, setGroup }) {
@@ -19,7 +19,7 @@ function GroupTab({ tab, setTab, username, setGroup }) {
         return (
             <div className='TabElement'>
                 <strong>Nome: </strong>{nome}
-                <img src={imagem} alt='Sem imagem' />
+                <img src={IMAGES_PATH + imagem} alt='Sem imagem' />
                 <strong>Criado: </strong>{data_criacao}
                 <button onClick={onClick}>Selecionar</button>
             </div>
