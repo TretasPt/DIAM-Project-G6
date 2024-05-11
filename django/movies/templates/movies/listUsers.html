@@ -11,13 +11,11 @@
         <h1>Utilizadores:</h1>
 
         {% if users_list %}
-        <div class="bodyText">
             {% for user in users_list %}
             <li>
                 <a href="{% url 'movies:userOptions' user.id %}">{{ user.user }}</a>
             </li>
             {% endfor %}
-        </div>
         {% else %}
         <p>Nao ha utilizadores disponiveis.</p>
         {% endif %}

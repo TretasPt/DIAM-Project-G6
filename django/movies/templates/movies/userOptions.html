@@ -18,19 +18,17 @@
                     {% csrf_token %}
                     <section>
                         <section>
-                            <section class="inputelement">
                                 <label for="username">New Username: <input type="text" name="username" id="username"> </label><br>
                                 <br><label for="email">New Email: <input type="email" name="email" id="email"> </label><br>
                                 <br><label for="verified">Verify: <input type="checkbox" name="verified" id="verified" {%if user.verificado%} checked {%endif%}></label>
-                            </section>
                         </section>
                     </section>
-                    <br><input class="controlbutton" type="submit" value="Edit User" />
+                    <br><input type="submit" value="Edit User" />
                 </form>
                 {% endif %}
 
                 {% if perms.movies.deleteUser %}
-                <br><a href="{% url 'movies:deleteUser' user.id  %}"><button class="controlbutton">Delete User</button></a>
+                <br><a href="{% url 'movies:deleteUser' user.id  %}"><button>Delete User</button></a>
                 {% endif %}
             {%else%}
             <div class="profileContainer">
