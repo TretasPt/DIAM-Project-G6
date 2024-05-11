@@ -1,0 +1,75 @@
+{% extends 'movies/userform.html' %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+    
+{% block main %}
+<div class="alignCenter">
+    <h1 style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Selected: {{ user.user }}</h1>
+    
+    <body>
+        {%if request.user.is_superuser %}
+            {% if not user.user.is_superuser %}     
+                {% if perms.movies.editUser %}
+                <form action="{% url 'movies:editUser' user.id %}" method="post">
+                    {% csrf_token %}
+                    <section>
+                        <section>
+                                <label for="username">New Username: <input type="text" name="username" id="username"> </label><br>
+                                <br><label for="email">New Email: <input type="email" name="email" id="email"> </label><br>
+                                <br><label for="verified">Verify: <input type="checkbox" name="verified" id="verified" {%if user.verificado%} checked {%endif%}></label>
+                        </section>
+                    </section>
+                    <br><input type="submit" value="Edit User" />
+                </form>
+                {% endif %}
+
+                {% if perms.movies.deleteUser %}
+                <br><a href="{% url 'movies:deleteUser' user.id  %}"><button>Delete User</button></a>
+                {% endif %}
+            {%else%}
+            <div class="profileContainer">
+                {%if request.user.imagem %}
+                    <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{{ user.imagem.url }}"></a>
+                {%else%}
+                    <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/noprofileimg.png' %}"></a>
+                {%endif%}
+                <div class="profileTextInfo">
+                    <p>Username: {{user.user}}</p>
+                    <p>Joined: {{user.data_adesao}}</p>
+                    <p>Email: {{user.user.email}}</p>
+                    {%if user.user.verificado%}
+                        <p>Verified ✔</p>
+                    {%else%}
+                        <p> Not Verified ✘</p>
+                    {%endif%}
+                </div>
+            </div>
+            {% endif %}
+        {% else %}
+        <div class="profileContainer">
+            {%if request.user.imagem %}
+                <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{{ user.imagem.url }}"></a>
+            {%else%}
+                <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/noprofileimg.png' %}"></a>
+            {%endif%}
+            <div class="profileTextInfo">
+                <p>Username: {{user.user}}</p>
+                <p>Joined: {{user.data_adesao}}</p>
+                <p>Email: {{user.user.email}}</p>
+                {%if user.user.verificado%}
+                    <p>Verified ✔</p>
+                {%else%}
+                    <p> Not Verified ✘</p>
+                {%endif%}
+            </div>
+        </div>
+        {% endif %}
+    </body>
+</div>
+{% endblock %}
+
+</html>
