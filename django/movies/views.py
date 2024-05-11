@@ -9,11 +9,12 @@ from .models import *
 from .serializers import *
 from django.contrib.auth import authenticate
 from django.http import HttpResponse,JsonResponse
-# from django.shortcuts import render
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import Permission 
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -73,7 +74,7 @@ def loginUser(request):
     else:
         return render(request, 'movies/login.html')
 
-@login_required(login_url=reverse_lazy('votacao:loginUser'))
+@login_required(login_url=reverse_lazy('movies:loginUser'))
 def createGroup(request):
     if request.method == 'POST':
         utilizador = Utilizador.objects.get(user=request.user)
@@ -94,7 +95,7 @@ def createGroup(request):
     else:
         return render(request, 'movies/createGroup.html')
 
-@login_required(login_url=reverse_lazy('votacao:loginUser'))
+@login_required(login_url=reverse_lazy('movies:loginUser'))
 def group(request, group_id):
     if request.method == 'POST':
         message = request.POST.get('messageinput')
@@ -133,6 +134,7 @@ def databaseTest(request):
         output+= "<li> <ul> <li>Username:"+user.user.username+"</li>\n"
         output+= "<li>Email:" + user.user.email + "</li>\n"
         output+= "<li>Imagem: <a href='"  + user.imagem + "'>"+user.imagem+"</a> </li>\n"
+        output+= "<li>Verificado:" + str(user.verificado) + "</li>\n"
         output+= "<li>Data de adesão:" + str(user.data_adesao)+"</li></ul></li>\n"
     output +="</ul></li>\n"
 
@@ -345,3 +347,61 @@ def voto(request):
     else:
         return Response({'error':'Invalid request method. Methods allowed:POST,DELETE'},status=status.HTTP_400_BAD_REQUEST)
 
+
+@login_required(login_url=reverse_lazy('movies:loginUser'))
+def listUsers(request):
+    users_list = Utilizador.objects.order_by('data_adesao')[:5]
+    context = {
+        'users_list': users_list
+    }
+    return render(request, 'movies/listUsers.html', context)
+
+
+def userOptions(request, user_id):
+    user = get_object_or_404(Utilizador, pk=user_id)
+    context = {
+        'user': user
+    }
+    return render(request, 'movies/userOptions.html', context)
+
+
+def logoutuser (request):
+    logout(request)
+    return HttpResponseRedirect(reverse('movies:index'))   
+
+
+@permission_required('movies.deleteUser', login_url=reverse_lazy('movies:loginuser'))
+def deleteUser (request, user_id):
+    user = get_object_or_404(Utilizador, pk=user_id)
+    user.delete()
+
+    return HttpResponseRedirect(reverse('movies:listUsers'))   
+
+
+@permission_required('movies.editUser', login_url=reverse_lazy('movies:loginuser'))
+def editUser (request, user_id):
+    utilizador = get_object_or_404(Utilizador, pk=user_id) 
+    user = utilizador.user
+
+    if request.method == 'POST':
+        new_username = request.POST.get('username')
+        new_email = request.POST.get('email')
+        new_verified = request.POST.get('verified')
+
+        print(user.username)
+        if new_username.strip(): user.username = new_username
+        print(new_username)
+        
+        if(new_email):user.email = new_email
+        
+        print(new_verified)
+        if(new_verified == "on"):
+            utilizador.verificado = True
+        elif (new_verified == None):
+            utilizador.verificado = False
+        else: False
+
+        user.save()
+        utilizador.save()
+        
+    return HttpResponseRedirect(reverse('movies:index'))  

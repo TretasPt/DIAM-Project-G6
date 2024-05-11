@@ -8,6 +8,11 @@ urlpatterns = [
     path("login", views.loginUser, name="loginUser"),
     path("creategroup", views.createGroup, name="createGroup"),
     path("group/<int:group_id>", views.group, name="group"),
+    path("listUsers", views.listUsers, name="listUsers"),
+    path("listUsers/<int:user_id>", views.userOptions, name='userOptions'),
+    path('index', views.logoutuser, name='logoutuser'),
+    path('<int:user_id>/deleteUser', views.deleteUser, name="deleteUser"),
+    path('<int:user_id>/editUser', views.editUser, name="editUser"),
  
     #Test
     path("test", views.databaseTest, name="databaseTest"),
