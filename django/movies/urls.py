@@ -13,16 +13,17 @@ urlpatterns = [
     path("createpost", views.createPost, name="createPost"),
     path("sendmessage", views.sendMessage, name="sendMessage"),
     path("receivemessage", views.receiveMessage, name="receiveMessage"),
-    path("<int:group_id>/group", views.group, name="group"),
+    path("listMovies", views.listMovies, name="listMovies"),
     path("group/<int:group_id>", views.group, name="group"),
-
     path("inviteToGroup/<int:group_id>", views.inviteToGroup, name="inviteToGroup"),
-    # path(r'^inviteToGroup/(?P<username>\w{0,50})/$', views.inviteToGroup, name="inviteToGroup"),
     path("listUsers", views.listUsers, name="listUsers"),
     path("listUsers/<int:user_id>", views.userOptions, name='userOptions'),
     path('<int:user_id>/deleteUser', views.deleteUser, name="deleteUser"),
     path('<int:user_id>/editUser', views.editUser, name="editUser"),
- 
+    path('searchMovie', views.searchMovie, name="searchMovie"),
+    path("listMovies/<int:filme_id>", views.moviesOptions, name='moviesOptions'),
+    path('<int:filme_id>/editMovie', views.editMovie, name="editMovie"),
+
     #Test
     path("test", views.databaseTest, name="databaseTest"),
 
