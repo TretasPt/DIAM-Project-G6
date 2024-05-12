@@ -4,10 +4,13 @@
     <form class="userform" method="post" action="{% url 'movies:createGroup' %}">
         {% csrf_token %}
         <section class="formfield">
-            <label for="GroupName">Nome:</label>
-            <input id="GroupName" type="text" name="groupname" required/>
+            <label for="GroupName">Nome:<input id="GroupName" type="text" name="groupname" required/></label>
+            <br>
+            <label>Tornar o grupo publico: <input name="publico" type="checkbox"></label>
+            <br>
+            <br>
+            <input type="submit" value="Criar">
         </section>
-        <input type="submit" value="Criar">
     </form>
 {% endblock %}
 

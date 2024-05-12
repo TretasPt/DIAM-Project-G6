@@ -152,11 +152,14 @@ header {
 }
 
 .formfield {
-    display: grid;
-    grid-template-columns: 40% 60%;
-    margin: 10px 0px 10px 0px;
+    display: flex;
+    /* grid-template-columns: 40% 60%; */
+    /* margin: 10px 0px 10px 0px; */
     font-size: 20px;
     text-align: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .formfield > input {

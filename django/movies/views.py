@@ -39,7 +39,6 @@ def index(request):
         'publicacoes_list': publicacoes_list
     })
 
-@login_required
 def registerUser(request):
     if request.method == 'POST':
         user = User.objects.create_user(
@@ -84,10 +83,7 @@ def logoutUser (request):
 def createGroup(request):
     if request.method == 'POST':
         utilizador = Utilizador.objects.get(user=request.user)
-        grupo = Grupo(
-            nome=request.POST.get('groupname'),
-            data_criacao=timezone.now()
-        )
+        grupo = Grupo.create(request.POST.get('groupname'),bool(request.POST.get("publico")))
         utilizadorGrupo = UtilizadorGrupo(
             utilizador=utilizador,
             grupo=grupo,
@@ -96,7 +92,6 @@ def createGroup(request):
             convite_por_aceitar_grupo=False,
             date_joined=timezone.now()
         )
-        grupo.save()
         utilizadorGrupo.save()
         return HttpResponseRedirect(reverse('movies:group', args=(grupo.id,)))
     else:
