@@ -1,0 +1,34 @@
+{% extends 'movies/userform.html' %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+
+{% block main %}
+<div class="alignCenter">
+
+    <body>
+        <form action="{% url 'movies:profile' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <section>
+                <img class="imgcropper" style="max-width: 30%;" src="{% static request.user.utilizador.imagem %}">
+                <br>
+                <h2>Username: {{request.user.username}}</h2>
+                <section>
+                    <br>
+                    <label>Nova imagem: <input type="file" name="image" accept="image/*"></label>
+                    <br>
+                    <br>
+                    <label for="username">Novo Username: <input type="text" name="username" id="username"></label>
+                </section>
+            </section>
+            <br><input type="submit" value="Save changes" />
+            <br><input type="submit" value="Apagar conta" name="delete" />
+        </form>
+    </body>
+</div>
+{% endblock %}
+
+</html>

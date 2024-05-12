@@ -12,7 +12,7 @@
                     {%if filme1.filme == movie%}
                         <section class="postbox">
                             <section class="posttopic">
-                                <img class="moviePic" src="{{ movie.imagem }}"> 
+                                <img class="moviePic" style="max-width: 100%;" src="{% static movie.imagem %}"> 
                                 <section class="posttopicimage"></section>
                                 <section class="posttopictitle"></section>
                             </section>
@@ -35,7 +35,7 @@
                     {%if filme2.filme == movie%}
                         <section class="postbox">
                             <section class="posttopic">
-                                <img class="moviePic" src="{{ movie.imagem }}">
+                                <img class="moviePic" style="max-width: 100%;" src="{% static movie.imagem %}">
                                 <section class="posttopicimage"></section>
                                 <section class="posttopictitle"></section>
                             </section>

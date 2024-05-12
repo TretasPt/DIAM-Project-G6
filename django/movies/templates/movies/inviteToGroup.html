@@ -4,6 +4,25 @@
 
 {% block main_content %}
 <section class="scrollbox">
+    <h1>Operações:</h1>
+    <form action="{% url 'movies:inviteToGroup' group_id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="management" value="Not Empty">
+        <section>
+            <img class="imgcropper" style="max-width: 20%;" src="{% static group.imagem %}">
+            <br>
+            <h2>Nome do grupo: {{group.nome}}</h2>
+            <section>
+                <br>
+                <label>Nova imagem: <input type="file" name="image" accept="image/*"></label>
+                <br>
+                <br>
+                <label for="username">Alterar nome do grupo: <input type="text" name="group_name" id="username"></label>
+            </section>
+        </section>
+        <br><input type="submit" value="Salvar alterações" />
+        <br><input type="submit" value="Apagar grupo" name="delete" />
+    </form>
     <h1>Filtrar username:</h1>
     <form method="get">
         <label>Username: <input type="search" name="search" value={{search}}></label>
@@ -116,6 +135,7 @@
 <a class="socialbox groupbox" href="{% url 'movies:group' grupo.id %}">
     <section class="scroll">
         {{ grupo.nome }}
+        <img class="profileimg" style="width: unset;" src="{% static grupo.imagem %}"/>
     </section>
 </a>
 {% endfor %}

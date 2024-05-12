@@ -11,8 +11,10 @@
     <h1 style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Selected: {{ user.user }}</h1>
     
     <body>
+        <a href="{% url 'movies:listUsers' %}"><-Back</a>
+        <br>
         {%if request.user.is_superuser %}
-            {% if not user.user.is_superuser %}     
+            {% if not user.user.is_superuser %}
                 {% if perms.movies.editUser %}
                 <form action="{% url 'movies:editUser' user.id %}" method="post">
                     {% csrf_token %}
@@ -32,8 +34,8 @@
                 {% endif %}
             {%else%}
             <div class="profileContainer">
-                {%if request.user.imagem %}
-                    <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{{ user.imagem }}"></a>
+                {%if user.imagem %}
+                    <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static user.imagem %}"></a>
                 {%else%}
                     <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/NO_USER_IMAGE.png' %}"></a>
                 {%endif%}
@@ -51,8 +53,8 @@
             {% endif %}
         {% else %}
         <div class="profileContainer">
-            {%if request.user.imagem %}
-                <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{{ user.imagem }}"></a>
+            {%if user.imagem %}
+                <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static user.imagem %}"></a>
             {%else%}
                 <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/NO_USER_IMAGE.png' %}"></a>
             {%endif%}
