@@ -6,6 +6,27 @@
     <script src="{% static 'movies/scripts/mensagens.js' %}"></script>
 {% endblock %}
 
+{% block controls_content %}
+    {% if user.is_authenticated %}
+        <a class="control_row" href="{% url 'movies:createGroup' %}">
+            <img class="control_icon" src="{% static 'movies/images/plus.png' %}"/>
+            <p class="control_name">Criar Grupo</p>
+        </a>
+        {% if group_id %}
+            <a class="control_row" href="{% url 'movies:inviteToGroup' group_id %}">
+                <img class="control_icon" src="{% static 'movies/images/plus.png' %}"/>
+                <p class="control_name">Membros</p>
+            </a>
+        {% endif %}
+        {% if convite_por_aceitar_user %}
+            <a class="control_row" href="{% url 'movies:userAcceptInvite' group_id %}">
+                <img class="control_icon" src="{% static 'movies/images/plus.png' %}"/>
+                <p class="control_name">Aceitar Convite</p>
+            </a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
 {% block main_content %}
     <section id="group_messages_body">
         <section id="message_template" class="hiddensection">
@@ -35,12 +56,6 @@
 {% endblock %}
 
 {% block aside_content %}
-    <div class="socialbox">
-        <a id="creategroupbox"  href="{% url 'movies:createGroup' %}">Create Group</a>
-        {% if group_id %}
-        <a id="creategroupbox"  href="{% url 'movies:inviteToGroup' group_id %}">Membros</a>
-        {% endif %}
-    </div>
     {% if groups_list %}
         {% for group in groups_list %}
             <a class="socialbox groupbox" href="{% url 'movies:group' group.id %}">

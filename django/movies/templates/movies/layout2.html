@@ -9,7 +9,10 @@
 
 {% block aside %}
     <aside class="layout2_aside">
-        <section class="layout2_aside_fade"></section>
+        <section class="controlls socialbox">
+            {% block controls_content %}
+            {% endblock %}
+        </section>
         {% block aside_content %}
         {% endblock %}
     </aside>

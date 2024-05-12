@@ -21,7 +21,7 @@
     </form>
     <section id="cinemas_nao_aderidos">
         {% for cinema in cinemas_nao_aderidos_list %}
-            <form id="cinema_{{ cinema_id }}" class="cinema" method="post" action="{% url 'movies:adhereCinema' %}">
+            <form id="cinema_{{ cinema_id }}" class="cinema_aderir" method="post" action="{% url 'movies:adhereCinema' %}">
                 {% csrf_token %}
                 <section class="cinema_aderir_name">
                     {{ cinema.nome }}
