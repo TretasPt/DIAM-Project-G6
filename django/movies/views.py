@@ -83,7 +83,8 @@ def logoutUser (request):
 def createGroup(request):
     if request.method == 'POST':
         utilizador = Utilizador.objects.get(user=request.user)
-        grupo = Grupo.create(request.POST.get('groupname'),bool(request.POST.get("publico")))
+        img = request.FILES.get("image",None)
+        grupo = Grupo.create(request.POST.get('groupname'),bool(request.POST.get("publico")),img)
         utilizadorGrupo = UtilizadorGrupo(
             utilizador=utilizador,
             grupo=grupo,

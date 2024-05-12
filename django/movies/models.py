@@ -25,7 +25,7 @@ class Utilizador(models.Model):
             try:
                 fs = FileSystemStorage()
                 filename = fs.save("user_images/"+imagem.name, imagem)
-                image_url = fs.url(filename)
+                image_url = fs.url(filename)[1:]
             except Exception as e:
                 user.delete()
                 print(e)
@@ -54,7 +54,7 @@ class Filme(models.Model):
         try:
             fs = FileSystemStorage()
             filename = fs.save("movie_images/"+imagem.name, imagem)
-            image_url = fs.url(filename)
+            image_url = fs.url(filename)[1:]
         except Exception as e:
             print(e)
             return
@@ -84,7 +84,7 @@ class Grupo(models.Model):
             try:
                 fs = FileSystemStorage()
                 filename = fs.save("group_images/"+imagem.name, imagem)
-                image_url = fs.url(filename)
+                image_url = fs.url(filename)[1:]
             except Exception as e:
                 print(e)
                 return

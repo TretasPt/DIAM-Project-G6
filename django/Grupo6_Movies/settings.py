@@ -139,8 +139,8 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Used for static folder access.
-MEDIA_URL = '/movies/static/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'movies/static/media')
+MEDIA_URL = ''
+MEDIA_ROOT = os.path.join(BASE_DIR,'movies/static')
 
 #Used for react connection.
 CORS_ALLOW_ALL_ORIGINS = True

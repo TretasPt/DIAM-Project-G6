@@ -44,6 +44,7 @@
             <a class="socialbox groupbox" href="{% url 'movies:group' group.id %}">
                 <section class="scroll">
                     {{ group.nome }}
+                    <img class="profileimg" style="width: unset;" src="{% static group.imagem %}"/>
                 </section>
             </a>
         {% endfor %}
