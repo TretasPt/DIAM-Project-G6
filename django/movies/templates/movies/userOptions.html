@@ -33,9 +33,9 @@
             {%else%}
             <div class="profileContainer">
                 {%if request.user.imagem %}
-                    <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{{ user.imagem.url }}"></a>
+                    <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{{ user.imagem }}"></a>
                 {%else%}
-                    <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/noprofileimg.png' %}"></a>
+                    <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/NO_USER_IMAGE.png' %}"></a>
                 {%endif%}
                 <div class="profileTextInfo">
                     <p>Username: {{user.user}}</p>
@@ -52,9 +52,9 @@
         {% else %}
         <div class="profileContainer">
             {%if request.user.imagem %}
-                <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{{ user.imagem.url }}"></a>
+                <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{{ user.imagem }}"></a>
             {%else%}
-                <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/noprofileimg.png' %}"></a>
+                <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/NO_USER_IMAGE.png' %}"></a>
             {%endif%}
             <div class="profileTextInfo">
                 <p>Username: {{user.user}}</p>

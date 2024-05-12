@@ -2,7 +2,7 @@ import TabHeader from './TabHeader';
 import "../css/Tabs.css"
 import { useEffect, useState } from 'react';
 import axios from "axios"
-import { BACKEND_PATH } from './constants'
+import { BACKEND_PATH,IMAGES_PATH } from './constants'
 
 function ChoicesTab({ tab, setTab, event, username }) {
     const tabName = "Escolhas";
@@ -47,7 +47,7 @@ function ChoicesTab({ tab, setTab, event, username }) {
                 }
                 <strong>Votos: </strong>{votos.count}
                 <strong>Filme: </strong>{filme.nome}
-                <img src={filme.imagem} alt="Sem imagem" />
+                <img src={IMAGES_PATH + filme.imagem} alt="Sem imagem" />
                 <strong>Sessão: </strong>{sessao}
                 <strong>Género: </strong>{filme.genre}
                 <strong>Saga: </strong>{filme.saga}

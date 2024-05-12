@@ -1,18 +1,24 @@
 {% extends 'movies/userform.html' %}
 
 {% block main %}
-    <form class="userform" method="post" action="{% url 'movies:loginUser' %}">
+<div class="userformcontainer">
+
+    {% if error_message %}
+    <h1>{{ error_message }}</h1>
+    {% endif %}
+    <form class="userform" method="post" action="{% url 'movies:loginUser'%} ">
         {% csrf_token %}
         <section class="formfield">
             <label for="LoginUsername">Username:</label>
-            <input id="LoginUsername" type="text" name="username" required/>
+            <input id="LoginUsername" type="text" name="username" autofocus required />
         </section>
         <section class="formfield">
             <label for="LoginPassword">Password:</label>
-            <input id="LoginPassword" type="password" name="password" required/>
+            <input id="LoginPassword" type="password" name="password" required />
         </section>
         <input type="submit" value="Login">
     </form>
+</div>
 {% endblock %}
 
 {% block aside %}{% endblock %}
