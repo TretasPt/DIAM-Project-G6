@@ -1,0 +1,89 @@
+{% extends 'movies/layout1.html' %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>    
+    {% block main_content %}
+        <section class="scrollbox">
+            {% if movies_list %}
+                {% for movie in movies_list %}
+                    {% for filme1 in watched_list%}
+                    {%if filme1.filme == movie%}
+                        <section class="postbox">
+                            <section class="posttopic">
+                                <img class="moviePic" src="{{ movie.imagem }}"> 
+                                <section class="posttopicimage"></section>
+                                <section class="posttopictitle"></section>
+                            </section>
+                            <section class="movieText">
+                                <section class="posttext">
+                                    <p>Movie: {{ movie.nome }}</p>
+                                    <p>Gender: {{movie.genre.nome}}</p>
+                                    {%if movie.saga != null%}
+                                        <p>Saga: {{movie.saga.nome}}</p>
+                                    {%endif%}
+                                    <p>Duration: {{movie.duracao}}</p>
+                                    <p>Release Date: {{movie.data_publicacao}}</p>
+                                    <p>Watched: ✔</p>
+                                </section>
+                            </section>
+                        </section>
+                    {%endif%}
+                    {% endfor %}
+                    {% for filme2 in toSee_list%}
+                    {%if filme2.filme == movie%}
+                        <section class="postbox">
+                            <section class="posttopic">
+                                <img class="moviePic" src="{{ movie.imagem }}">
+                                <section class="posttopicimage"></section>
+                                <section class="posttopictitle"></section>
+                            </section>
+                            <section class="movieText">
+                                <section class="posttext">
+                                    <p>Movie: {{ movie.nome }}</p>
+                                    <p>Gender: {{movie.genre.nome}}</p>
+                                    {%if movie.saga != null%}
+                                        <p>Saga: {{movie.saga.nome}}</p>
+                                    {%endif%}
+                                    <p>Duration: {{movie.duracao}}</p>
+                                    <p>Release Date: {{movie.data_publicacao}}</p>
+                                    <p>To See: ✔</p>
+                                </section>
+                            </section>
+                        </section>
+                    {%endif%}
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        </section>
+    {% endblock %}
+    
+
+
+
+    {% block controls_content %}
+        <div class="moviesSearch">
+        {% if user.is_authenticated %}
+        <form action="{% url 'movies:searchMovie'%}" method="post">
+            {% csrf_token %}
+            <section>
+                <br><label for="movieName">Search:<input type="text" name="movieName" id="movieName"> </label>
+             </section>
+             <button type="submit" value=""><img class="control_icon" src="{% static 'movies/images/lupa.png' %}" alt="Submit"></button> 
+        </form>
+        
+        {% if movies_list %}
+            {% for filme in movies_list %}
+            <li>
+                <a href="{% url 'movies:moviesOptions' filme.id %}">{{ filme.nome }}</a>
+            </li>
+            {% endfor %}
+        {% else %}
+        <p>Nao ha filmes disponiveis.</p>
+        {% endif %}
+
+        {% endif %}
+        </div>
+    {% endblock %}
+</html>

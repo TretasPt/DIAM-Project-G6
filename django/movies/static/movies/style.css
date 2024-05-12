@@ -145,6 +145,13 @@ header {
     margin-left: auto;
 }
 
+.userformCreateGroup {
+    width: 40%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
 .userformcontainer {
     width: 100%;
     text-align: center;
@@ -240,6 +247,70 @@ header {
 
     /* margin: 2vh auto 1vh auto; */
     width: 300px;
+    height: 180px;
+}
+
+.moviePic{
+    border-radius: 0%;
+    overflow: hidden;
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    transition: 0.2s;
+    width: 20vh;
+    height: 30vh;
+}
+
+.movieText {
+    flex: 1;
+    margin-right: 0;
+    padding: 20px;
+    line-height: 10px;
+    text-align: justify;
+    width: 20vh;
+    height: 30vh;
+}
+
+.moviesSearchBox {
+    background-color: gainsboro;
+    border-radius: 5px;
+    display: block;
+    width: 85%;
+    float: left;
+    margin-left: 5%;
+    margin-bottom: 2vh;
+    overflow: hidden;
+}
+
+.movieContainer{
+    display: flex;
+    align-items: center;
+}
+
+.moviePicInfo {
+    border-radius: 0%;
+    overflow: hidden;
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    transition: 0.2s;
+    width: 20vh;
+    height: 30vh;
+}
+
+.movieTextInfo{
+    display: block;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: left;
+    transition: 0.2s;
+    margin-left: 30px;
+
+    /* margin: 2vh auto 1vh auto; */
+    width: 400px;
     height: 180px;
 }
 
