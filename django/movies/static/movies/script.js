@@ -115,5 +115,5 @@ $(document).ready(function(event){
         });
     }
 
-    // setInterval(func, 1000);
+    setInterval(func, 1000);
 });
