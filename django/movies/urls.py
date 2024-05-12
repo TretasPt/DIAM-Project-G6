@@ -21,6 +21,7 @@ urlpatterns = [
     path('adherecinema', views.adhereCinema, name="adhereCinema"),
     path("inviteToGroup/<int:group_id>", views.inviteToGroup, name="inviteToGroup"),
     path("userAcceptInvite/<int:group_id>", views.userAcceptInvite, name="userAcceptInvite"),
+    path("removeCinema", views.removeCinema, name="removeCinema"),
  
     path("listMovies", views.listMovies, name="listMovies"),
     path('searchMovie', views.searchMovie, name="searchMovie"),

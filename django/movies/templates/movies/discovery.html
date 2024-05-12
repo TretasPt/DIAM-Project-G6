@@ -41,7 +41,11 @@
             <h2>Cinemas Aderidos</h2>
             <ul>
                 {% for cinema in cinemas_aderidos_list %}
-                    <li><a>{{ cinema.nome }}</a></li>
+                    <form method="post" action="{% url 'movies:removeCinema' %}">
+                        {% csrf_token %}
+                        <li>{{ cinema.nome }}<input type="submit" value="Remover Cinema"/></li>
+                        <input type="number" name="cinema_id" value="{{ cinema.id }}" hidden="hidden"/>
+                    </form>
                 {% endfor %}
             </ul>
         </section>

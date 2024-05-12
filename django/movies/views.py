@@ -250,6 +250,16 @@ def adhereCinema(request):
     utilizadorcinema.save()
     return HttpResponseRedirect(reverse('movies:discovery'))
 
+def removeCinema(request):
+    cinema = Cinema.objects.get(pk=request.POST['cinema_id'])
+    utilizadorcinema = get_object_or_404(
+        UtilizadorCinema,
+        utilizador=request.user.utilizador,
+        cinema=cinema
+    )
+    utilizadorcinema.delete()
+    return HttpResponseRedirect(reverse('movies:discovery'))
+
 def getRecentGroupsList(user):
     recentgroups_list = Grupo.objects.filter(Utilizador.objects.get(
         user=user
