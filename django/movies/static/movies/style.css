@@ -61,6 +61,21 @@ header {
     width: 8vh;
 }
 
+.post_form_option {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.post_form_section {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+}
+
 .navbutton {
     background-color: gainsboro;
     display: block;
@@ -106,7 +121,7 @@ header {
     height: 3vh;
 }
 
-.socialbox {
+.socialbox_alt {
     background-color: gainsboro;
     border-radius: 5px;
     display: flex;
@@ -117,6 +132,17 @@ header {
     overflow: hidden;
     padding: 5%;
     justify-content: space-around;
+}
+
+.socialbox {
+    background-color: gainsboro;
+    border-radius: 5px;
+    display: block;
+    width: 85%;
+    float: left;
+    margin-left: 5%;
+    margin-bottom: 2vh;
+    overflow: hidden;
 }
 
 .groupbox {
@@ -379,10 +405,13 @@ header {
 }
 
 .radio_option {
+    display: block;
     cursor: pointer;
-    height: 23px;
-    width: 23px;
-    background-color: lightblue;
+    width: 30px;
+    height: 30px;
+    background-color: #8a334a;
+    text-align: center;
+    border-radius: 5px;
 }
 
 .radio_option.click {
@@ -414,8 +443,57 @@ header {
     height: 60px;
 }
 
+.cinemas_aderidos {
+    text-align: center;
+}
+
+.cinemas_aderidos > ul {
+    width: 60%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cinema_aderir_input {
+    height: inherit;
+    width: 20px;
+    flex: 1;
+    margin-right: 0;
+}
+
+.cinema_aderir_name {
+    width: 100%;
+    margin-left: 10px;
+}
+
+.cinema_aderir {
+    display: block;
+    margin: 10px auto 10px auto;
+    background-color: darkgray;
+    border-radius: 5px;
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+}
+
 #group_messages_body {
-    
+    height: calc(100% - 60px);
+    width: 100%;
+    overflow: auto;
+}
+
+#message_form {
+    height: 60px;
+}
+
+#message_input {
+    height: 100%;
+    width: 100%;
+    border: none;
+    font-size: 15px;
+    resize: none;
+    overflow-y: auto;
+    scrollbar-width: none;
 }
 
 
@@ -459,13 +537,24 @@ header {
     margin-bottom: 0;
 }
 
-#messageform {
-    height: 50px;
+#cinema_search_form {
+    width: 60%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
 }
 
-#messageinput {
+#cinema_search_form > label {
+    font-size: 20px;
+}
+
+#cinema_search_input {
     width: 100%;
-    height: 100%;
-    border: none;
-    font-size: 15px;
+    height: 30px;
+}
+
+#cinema_search_input_section {
+    display: flex;
+    flex-direction: row;
 }

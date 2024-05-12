@@ -2,6 +2,33 @@
 
 {% load static %}
 
+{% block script %}
+    {% if  group_id%}
+        <script src="{% static 'movies/scripts/mensagens.js' %}"></script>
+    {% endif %}
+{% endblock %}
+
+{% block controls_content %}
+    {% if user.is_authenticated %}
+        <a class="control_row" href="{% url 'movies:createGroup' %}">
+            <img class="control_icon" src="{% static 'movies/images/plus.png' %}"/>
+            <p class="control_name">Criar Grupo</p>
+        </a>
+        {% if group_id %}
+            <a class="control_row" href="{% url 'movies:inviteToGroup' group_id %}">
+                <img class="control_icon" src="{% static 'movies/images/plus.png' %}"/>
+                <p class="control_name">Membros</p>
+            </a>
+        {% endif %}
+        {% if convite_por_aceitar_user %}
+            <a class="control_row" href="{% url 'movies:userAcceptInvite' group_id %}">
+                <img class="control_icon" src="{% static 'movies/images/plus.png' %}"/>
+                <p class="control_name">Aceitar Convite</p>
+            </a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
 {% block main_content %}
     <section id="group_messages_body">
         <section id="message_template" class="hiddensection">
@@ -22,11 +49,9 @@
             </section>
         {% endfor %}
     </section>
-    <section class="diaphragm">
-    </section>
-    <form id="messageform">
+    <form id="message_form">
         {% csrf_token %}
-        <input id="message_input" name="message_input"/>
+        <input id="message_input" name="message_input" type="text"/>
         <input id="group_id" name="group_id" type="number" value="{{ group_id }}" hidden="hidden"/>
         <input type="submit" hidden="hidden"/>
     </form>

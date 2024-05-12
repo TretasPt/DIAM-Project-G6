@@ -7,7 +7,8 @@
         <title>Index</title>
         <link rel="stylesheet" href="{% static 'movies/style.css' %}">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="{% static 'movies/script.js' %}"></script>
+        {% block script %}
+        {% endblock %}
     </head>
     <body>
         <section id="fixedcontent">
@@ -30,7 +31,7 @@
                     <a class="navbutton" href="{% url 'movies:listMovies'%}"><img class="imgcropper" src="{% static 'movies/images/listMovies.png' %}"></a>
                     <a class="navbutton" href="{% url 'movies:group' 0 %}"><img class="imgcropper" src="{% static 'movies/images/groups.png' %}"></a>
                     <a class="navbutton" href="{% url 'movies:listUsers'%}"><img class="imgcropper" src="{% static 'movies/images/usersList.png' %}"></a>
-                    <a class="navbutton" href="{% url 'movies:logoutuser' %}"><img class="imgcropper" src="{% static 'movies/images/logout.png' %}"></a>
+                    <a class="navbutton" href="{% url 'movies:logoutUser' %}"><img class="imgcropper" src="{% static 'movies/images/logout.png' %}"></a>
                     {% if request.user.is_superuser %}
                     <a class="navbutton" href="{% url 'movies:databaseTest' %}"><img class="imgcropper" src="{% static 'movies/images/test.png' %}"></a>
                     <a class="navbutton" href="http://localhost:3000/"><img class="imgcropper" src="{% static 'movies/images/mobile.png' %}"></a>
