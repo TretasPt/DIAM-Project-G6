@@ -3,24 +3,32 @@
 {% load static %}
 
 {% block main_content %}
-    {% if messages_list %}
+    <section id="group_messages_body">
+        <section id="message_template" class="hiddensection">
+            <section class="messageprofileimgcropper">
+                <img class="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>
+            </section>
+            <section class="messagetext">
+            </section>
+        </section>
         {% for message in messages_list %}
-            <section class="message">
+            <section id="message_{{ message.id }}" class="message">
                 <section class="messageprofileimgcropper">
-                    <img id="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>
+                    <img class="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>
                 </section>
                 <section class="messagetext">
                     {{ message.texto }}
                 </section>
             </section>
         {% endfor %}
-    {% endif %}
+    </section>
     <section class="diaphragm">
     </section>
-    <form class="messageinput_section">
+    <form id="messageform">
         {% csrf_token %}
-        <input id="messageinput" class="messageinput" name="messageinput"/>
-        <input type="submit" hidden/>
+        <input id="message_input" name="message_input"/>
+        <input id="group_id" name="group_id" type="number" value="{{ group_id }}" hidden="hidden"/>
+        <input type="submit" hidden="hidden"/>
     </form>
 {% endblock %}
 
