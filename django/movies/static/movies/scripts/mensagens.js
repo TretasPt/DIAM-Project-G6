@@ -49,5 +49,5 @@ $(document).ready(function(event){
         });
     }
 
-    setInterval(func, 10000);
+    setInterval(func, 5000);
 });

@@ -3,7 +3,9 @@
 {% load static %}
 
 {% block script %}
-    <script src="{% static 'movies/scripts/mensagens.js' %}"></script>
+    {% if  group_id%}
+        <script src="{% static 'movies/scripts/mensagens.js' %}"></script>
+    {% endif %}
 {% endblock %}
 
 {% block controls_content %}
