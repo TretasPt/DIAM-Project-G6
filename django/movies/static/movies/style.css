@@ -20,7 +20,7 @@ header {
 }
 
 .postbox {
-    height: 300px;
+    height: 30vh;
     width: 95%;
     display: flex;
     flex-direction: row;
@@ -33,8 +33,12 @@ header {
     overflow: hidden;
 }
 
+.posttext {
+    resize: none;
+}
+
 .posttopic {
-    width: 25%;
+    width: 20vh;
     background-color: #8a334a;
 }
 
@@ -44,6 +48,17 @@ header {
     padding: 20px;
     line-height: 30px;
     text-align: justify;
+}
+
+.postactions {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.postactions > * {
+    height: 100%;
+    width: 8vh;
 }
 
 .navbutton {
@@ -73,6 +88,22 @@ header {
     background-color: #8a334a;
     display: flex;
     flex-direction: column;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+}
+
+.control_row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.control_icon {
+    width: 3vh;
+    height: 3vh;
 }
 
 .socialbox {
@@ -152,15 +183,68 @@ header {
     overflow: hidden;
 }
 
-.messagetext {
-    width: 80%;
+.navbuttonscropper {
+    display: inline-block; 
+    width: 40px; 
+    height: 40px; 
+    overflow: hidden;
 }
 
-.messageinput {
-    width: 100%;
+.imgcropper{
+    width: 100%; 
     height: 100%;
-    border: none;
-    font-size: 15px;
+    object-fit: cover;
+    border-radius: 4.5px;
+}
+
+.usersList{
+    width: 40%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.alignCenter{
+    width: 40%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.profileContainer{
+    display: flex;
+    align-items: center;
+}
+
+.profilePicInfo {
+    border-radius: 50%;
+    overflow: hidden;
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    transition: 0.2s;
+    width: 130px;
+    height: 130px;
+}
+
+.profileTextInfo{
+    display: block;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: left;
+    transition: 0.2s;
+    margin-left: 20px;
+
+    /* margin: 2vh auto 1vh auto; */
+    width: 300px;
+    height: 180px;
+}
+
+.messagetext {
+    width: 80%;
 }
 
 .diaphragm {
@@ -168,9 +252,8 @@ header {
     margin-bottom: 0;
 }
 
-.messageinput_section {
-    height: 50px;
-    background-color: red;
+.hiddensection {
+    display: none;
 }
 
 /* Layout 1 */
@@ -212,7 +295,6 @@ header {
     overflow-y: auto;
     scrollbar-width: none;
 }
-
 .layout2_aside_fade {
     height: 100%;
     width: 100%;
@@ -222,9 +304,57 @@ header {
     pointer-events: none;
 }
 
-#creategroupbox {
+.radio_option {
+    cursor: pointer;
+    height: 23px;
+    width: 23px;
+    background-color: lightblue;
+}
+
+.radio_option.click {
+    background-color: cadetblue;
+}
+
+.createbox {
     /* height: 10vh; */
 }
+
+.profileimg {
+    width: inherit;
+}
+
+.profileimgcropper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: 0.2s;
+    overflow: hidden;
+}
+
+.profileimgcropper:hover {
+    width: 60px;
+    height: 60px;
+}
+
+#group_messages_body {
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #noaside {
     width: 7vw;
@@ -236,25 +366,6 @@ header {
     grid-template-columns: 7vw 63vw 30vw;
 }
 
-#profileimgcropper {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-left: auto;
-    margin-right: auto;
-    transition: 0.2s;
-    overflow: hidden;
-}
-
-#profileimgcropper:hover {
-    width: 60px;
-    height: 60px;
-}
-
-#profileimg {
-    width: inherit;
-}
-
 #username {
     margin-top: auto;
     margin-bottom: auto;
@@ -263,7 +374,22 @@ header {
     font-weight: bold;
 }
 
+#creategroupbox {
+    /* height: 10vh; */
+}
+
 #dontknowbox {
     flex: 1;
     margin-bottom: 0;
+}
+
+#messageform {
+    height: 50px;
+}
+
+#messageinput {
+    width: 100%;
+    height: 100%;
+    border: none;
+    font-size: 15px;
 }

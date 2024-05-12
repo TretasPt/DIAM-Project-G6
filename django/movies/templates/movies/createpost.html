@@ -1,0 +1,65 @@
+{% extends 'movies/layout1.html' %}
+
+{% load static %}
+
+{% block main_content %}
+    <section class="scrollbox">
+        <form id="postform" method="post" action="{% url 'movies:createPost' %}">
+            {% csrf_token %}
+            <section class="postbox">
+                <section class="posttopic">
+                    .
+                    <section class="posttopicimage"></section>
+                    <section class="posttopictitle"></section>
+                </section>
+                <textarea name="text" class="postcontent posttext" required></textarea>
+            </section>
+            <section style="display: flex; flex-direction: row">
+                <section style="display: flex; flex-direction: row; margin: 10px">
+                    Global
+                    <a id="global" class="radio_option"></a>
+                </section>
+            </section>
+            <h2>Grupos</h2>
+            <section style="display: flex; flex-direction: row">
+                {% for group in groups_list %}
+                    <section style="display: flex; flex-direction: row; margin: 10px">
+                        {{ group.nome }}
+                        <a id="group_{{ group.id }}" class="radio_option group"></a>
+                    </section>
+                {% endfor %}
+            </section>
+            <h2>Cinemas</h2>
+            <section style="display: flex; flex-direction: row">
+                {% for cinema in cinemas_list %}
+                    <section style="display: flex; flex-direction: row; margin: 10px">
+                        {{ cinema.nome }}
+                        <a id="cinema_{{ cinema.id }}" class="radio_option cinema"></a>
+                    </section>
+                {% endfor %}
+            </section>
+            <h2>Filme</h2>
+            <section>
+                {% for film in films_list %}
+                    <section style="display: flex; flex-direction: row; margin: 10px">
+                        <section style="display: flex; flex-direction: column">
+                            <img href=""/>
+                            {{ film.nome }}
+                        </section>
+                        <a id="film_{{ film.id }}" class="radio_option film"></a>
+                        <input id="film_radio_{{ film.id }}" class="radio" type="radio" value="{{ film.id }}" name="film_id" hidden="hidden" required/>
+                    </section>
+                {% endfor %}
+            </section>
+            <input id="submit" type="submit"/>
+        </form>
+    </section>
+{% endblock %}
+
+{% block aside_content %}
+    {% if user.is_authenticated %}
+        <section id="dontknowbox" class="socialbox">
+            Filmes nos cinamas locais (Com setas à esquerda e direita para ver a lista de filmes)
+        </section>
+    {% endif %}
+{% endblock %}

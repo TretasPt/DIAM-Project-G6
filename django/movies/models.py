@@ -64,6 +64,7 @@ class Filme(models.Model):
         return filme
 
 class Cinema(models.Model):
+    nome = models.CharField(max_length=100)
     localizacao = models.CharField(max_length=200)
     administrador = models.ForeignKey(Utilizador, models.SET_NULL, blank=True, null=True)#Cinemas sem administrador ficam a null.
 
@@ -140,8 +141,8 @@ class ListaFilmes(models.Model):
     grupo = models.ForeignKey(Grupo, models.CASCADE,blank=True, null=True)
     
     def clean(self, *args, **kwargs):
-        if self.utilizador is None and self.grupo is None:
-            raise ValidationError(_("ListaFilmes deve conter pelo menos ou um utilizador ou um grupo."))
+        if (self.utilizador is None) ^ (self.grupo is None):
+            raise ValidationError(_("ListaFilmes deve conter ou um utilizador ou um grupo."))
         super().clean(*args, **kwargs)
 
     def save(self, *args, **kwargs):
@@ -186,6 +187,14 @@ class UtilizadorGrupo(models.Model):
     def unpromote(self):
         self.administrador=False
         self.save()
+
+class PublicacaoGrupo(models.Model):
+    publicacao = models.ForeignKey(Publicacao, models.CASCADE)
+    grupo = models.ForeignKey(Grupo, models.CASCADE)
+
+class PublicacaoCinema(models.Model):
+    publicacao = models.ForeignKey(Publicacao, models.CASCADE)
+    cinema = models.ForeignKey(Cinema, models.CASCADE)
 
 class UtilizadorCinema(models.Model):
     utilizador = models.ForeignKey(Utilizador, models.CASCADE)
