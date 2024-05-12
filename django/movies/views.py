@@ -621,14 +621,14 @@ def editMovie (request, filme_id):
     filme = get_object_or_404(Filme, pk=filme_id)
 
     if request.method == 'POST':
-        new_lista_id = request.POST.get('watched')
+        # new_lista_id = request.POST.get('watched')
         
-        print(new_verified)
-        if(new_verified == "on"):
-            utilizador.verificado = True
-        elif (new_verified == None):
-            utilizador.verificado = False
-        else: False
+        # print(new_verified)
+        # if(new_verified == "on"):
+        #     utilizador.verificado = True
+        # elif (new_verified == None):
+        #     utilizador.verificado = False
+        # else: False
 
         filme.save()
         

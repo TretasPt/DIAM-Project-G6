@@ -17,9 +17,9 @@
                 <section>
                 <div class="movieContainer">
                     {%if filme.imagem %}
-                        <a class="moviePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{{ filme.imagem }}"></a>
+                        <a class="moviePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static filme.imagem %}"></a>
                     {%else%}
-                        <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/NO_USER_IMAGE.png' %}"></a>
+                        <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/NO_MOVIE_IMAGE.png' %}"></a>
                     {%endif%}
                     <div class="movieTextInfo">
                         <p>Movie: {{ filme.nome }}</p>
