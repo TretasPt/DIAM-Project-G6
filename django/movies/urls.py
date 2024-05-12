@@ -8,6 +8,7 @@ urlpatterns = [
     path("login", views.loginUser, name="loginUser"),
     path("logout", views.logoutUser, name="logoutUser"),
     path("creategroup", views.createGroup, name="createGroup"),
+    path("inviteToGroup/<int:group_id>", views.inviteToGroup, name="inviteToGroup"),
     path("group/<int:group_id>", views.group, name="group"),
  
     #Test

@@ -25,7 +25,12 @@
 {% endblock %}
 
 {% block aside_content %}
-    <a id="creategroupbox" class="socialbox" href="{% url 'movies:createGroup' %}">Create Group</a>
+    <div class="socialbox">
+        <a id="creategroupbox"  href="{% url 'movies:createGroup' %}">Create Group</a>
+        {% if group_id %}
+        <a id="creategroupbox"  href="{% url 'movies:inviteToGroup' group_id %}">Convidar para o grupo</a>
+        {% endif %}
+    </div>
     {% if groups_list %}
         {% for group in groups_list %}
             <a class="socialbox groupbox" href="{% url 'movies:group' group.id %}">

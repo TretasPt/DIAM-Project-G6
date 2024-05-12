@@ -9,7 +9,6 @@ from .models import *
 from .serializers import *
 from django.contrib.auth import authenticate
 from django.http import HttpResponse,JsonResponse
-# from django.shortcuts import render
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
@@ -17,6 +16,8 @@ from rest_framework.response import Response
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.db.models import Q
+
 
 def index(request):
     publicacoes_list = Publicacao.objects.order_by('-data_publicacao')#[:5] #TODO
@@ -64,15 +65,9 @@ def loginUser(request):
         except KeyError:
             return render(request, 'movies/login.html')
         if user:
-            login(request, user)
-            print("TODO - set profile image") #TODO - set profile image
-            # return HttpResponseRedirect(reverse('movies:index'))
-            # return redirect(request.GET.get('next'))
-            print(request.GET.get("next", "movies:index"))
-            print(request.POST.get('next', "movies:index"))
+            login(request,user)
+            return HttpResponseRedirect(reverse('movies:index'))
 
-            next_url = request.POST.get("next", "movies:index")
-            return redirect(next_url)
         else:
             return render(request, 'movies/login.html', {
                 'error_message': 'Falha de login'
@@ -123,6 +118,7 @@ def group(request, group_id):
                 .order_by('-timestamp')  # [:5]  TODO
             context['group_name'] = group_name
             context['messages_list'] = messages_list
+            context['group_id'] = group_id
         context['groups_list'] = groups_list
         return render(request, 'movies/group.html', context)
 
@@ -133,12 +129,32 @@ def getRecentGroupsList(user):
     return recentgroups_list
 
 @login_required
-def listGroups(request):
-    pass
+def inviteToGroup(request, group_id):
+    context = {}
+    if(request.method=="GET"):
+        context['group_id'] = group_id
+        utilizador = Utilizador.objects.get(user=request.user)
+
+        context['groups_list'] = Grupo.objects.filter(utilizadorgrupo__utilizador=utilizador)
+        context['members'] = UtilizadorGrupo.objects.filter(grupo__id=group_id,convite_por_aceitar_user=False,convite_por_aceitar_grupo=False)
+
+        ug = UtilizadorGrupo.objects.filter(utilizador=utilizador,grupo__id=group_id).first()
+        context['admin'] = ug.administrador if ug is not None else False
+        
+        if(context['admin']):
+            context['users'] = Utilizador.objects.filter(user__username__icontains="tesa").filter(~Q(id__in=context['members'].values("utilizador")))[:25]
+        return render(request, 'movies/inviteToGroup.html', context)
+    elif(request.method=="POST"):
+        return render(request, 'movies/inviteToGroup.html', context)
+    else:
+        return HttpResponse("TODO" + " - Convidar para o grupo " + str(group_id) + "\nBAD METHOD: "+request.method)
 
 
 
 
+
+
+@login_required
 def databaseTest(request):
     output = "<h1>DATABASE DUMP</h1>\n<ul>\n"
 
