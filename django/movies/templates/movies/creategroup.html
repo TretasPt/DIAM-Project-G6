@@ -1,13 +1,18 @@
 {% extends 'movies/base.html' %}
 
 {% block main %}
-    <form class="userform" method="post" action="{% url 'movies:createGroup' %}">
+    <form class="userform" method="post" action="{% url 'movies:createGroup' %}" enctype="multipart/form-data" >
         {% csrf_token %}
         <section class="formfield">
-            <label for="GroupName">Nome:</label>
-            <input id="GroupName" type="text" name="groupname" required/>
+            <label for="GroupName">Nome:<input id="GroupName" type="text" name="groupname" required/></label>
+            <br>
+            <label>Tornar o grupo publico: <input name="publico" type="checkbox"></label>
+            <br>
+            <label>Imagem do grupo: <input type="file" name="image" accept="image/*"></label>
+            <!-- <input type="file" accept="image/*" value="test" name="test"> -->
+            <br>
+            <input type="submit" value="Criar">
         </section>
-        <input type="submit" value="Criar">
     </form>
 {% endblock %}
 
