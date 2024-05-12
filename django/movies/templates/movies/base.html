@@ -14,12 +14,14 @@
             <nav class="personalpanel">
                 <header>
                     <section class="profileimgcropper">
-                        {% if request.user.is_authenticated %}
-                        <img class="profileimg" src="{% static request.user.utilizador.imagem %}"/>
-                        <!-- {{ request.user.utilizador.imagem }} -->
-                        {% else %}
-                        <img class="profileimg" src="{% static 'movies/images/NO_USER_IMAGE.png' %}"/>
-                        {% endif %}
+                        <a href="{% url 'movies:profile' %}">
+                            {% if request.user.is_authenticated %}
+                            <img class="profileimg" src="{% static request.user.utilizador.imagem %}"/>
+                            <!-- {{ request.user.utilizador.imagem }} -->
+                            {% else %}
+                            <img class="profileimg" src="{% static 'movies/images/NO_USER_IMAGE.png' %}"/>
+                            {% endif %}
+                        </a>
                     </section>
                 </header>
                 <div id="navbuttonscropper">

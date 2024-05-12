@@ -12,6 +12,18 @@ class Utilizador(models.Model):
     verificado = models.BooleanField(default=False)
     imagem = models.CharField(max_length=200,default="movies/images/NO_USER_IMAGE.png")
 
+    def atualizar_imagem(self,imagem):
+        try:
+            fs = FileSystemStorage()
+            filename = fs.save("user_images/"+imagem.name, imagem)
+            image_url = fs.url(filename)[1:]
+        except Exception as e:
+            print(e)
+            return
+        self.imagem=image_url
+        self.save()
+
+
     def create(username,password=None,email=None,imagem=None):
         try:
             user = User.objects.create_user(username=username,password=password,email=email)
@@ -76,6 +88,17 @@ class Grupo(models.Model):
 
     def get_last_message(grupo):
         return Mensagem.objects.filter(grupo=grupo).order_by("timestamp").last()
+
+    def atualizar_imagem(self,imagem):
+        try:
+            fs = FileSystemStorage()
+            filename = fs.save("group_images/"+imagem.name, imagem)
+            image_url = fs.url(filename)[1:]
+        except Exception as e:
+            print(e)
+            return
+        self.imagem=image_url
+        self.save()
 
     def create(nome,publico=False,imagem=None):
         if(imagem is None):

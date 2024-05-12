@@ -48,6 +48,7 @@ def registerUser(request):
         )
         utilizador = Utilizador(user=user)
         utilizador.save()
+        login(request,user)
         return HttpResponseRedirect(reverse('movies:index'))
     else:
         return render(request, 'movies/register.html')
@@ -200,6 +201,7 @@ def inviteToGroup(request, group_id):
         search=request.GET.get("search","")
         context['search']=search
         context['group_id'] = group_id
+        context['group'] = Grupo.objects.get(id=group_id)
         utilizador = Utilizador.objects.get(user=request.user)
 
         context['groups_list'] = Grupo.objects.filter(utilizadorgrupo__utilizador=utilizador)
@@ -216,24 +218,46 @@ def inviteToGroup(request, group_id):
             context['users'] = list(map(add_ug_if_exists,Utilizador.objects.filter(user__username__icontains=search).filter(~Q(id__in=context['members'].values("utilizador")))[:25]))
         return render(request, 'movies/inviteToGroup.html', context)
     elif(request.method=="POST"):
-        if(request.POST.get('RemoveAdmin')):
-            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
-            ug.unpromote()
-        elif(request.POST.get('AddAdmin')):
-            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
-            ug.promote()
-        elif(request.POST.get('RemoveFromGroup') or request.POST.get('RefuseJoin') or request.POST.get('RemoveInvite')):
-            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
-            ug.remove_user()
-        elif(request.POST.get('AcceptJoin')):
-            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
-            ug.accept_join_request()
-        elif(request.POST.get('AddInvite')):
-            u = Utilizador.objects.get(id=request.POST.get('utilizador_id'))
+
+        if(request.POST.get('management')):
+            print("I'm in!")
             grupo = Grupo.objects.get(id=group_id)
-            UtilizadorGrupo.grupo_invite_user(grupo,u)
+            delete = request.POST.get("delete")
+            if(delete):
+                grupo.delete()
+                return HttpResponseRedirect(reverse('movies:group', args=(0,),))
+            
+
+            group_name=request.POST['group_name']
+            img = request.FILES.get("image",None)
+            print("New username:" + group_name)
+            if((not group_name == "" )and (not group_name == grupo.nome)):
+                print("New username:" + group_name)
+                grupo.nome = group_name
+                grupo.save()
+            if(img):
+                grupo.atualizar_imagem(img)
+            # return render(request, 'movies/profile.html')
         else:
-            print("Error. Empty form.")
+
+            if(request.POST.get('RemoveAdmin')):
+                ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+                ug.unpromote()
+            elif(request.POST.get('AddAdmin')):
+                ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+                ug.promote()
+            elif(request.POST.get('RemoveFromGroup') or request.POST.get('RefuseJoin') or request.POST.get('RemoveInvite')):
+                ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+                ug.remove_user()
+            elif(request.POST.get('AcceptJoin')):
+                ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+                ug.accept_join_request()
+            elif(request.POST.get('AddInvite')):
+                u = Utilizador.objects.get(id=request.POST.get('utilizador_id'))
+                grupo = Grupo.objects.get(id=group_id)
+                UtilizadorGrupo.grupo_invite_user(grupo,u)
+            else:
+                print("Error. Empty form.")
 
         search=request.POST.get("search","")
         print(search)
@@ -242,6 +266,32 @@ def inviteToGroup(request, group_id):
     else:
         return HttpResponse("TODO" + " - Convidar para o grupo " + str(group_id) + "\nBAD METHOD: "+request.method)
 
+@login_required
+def profile(request):
+    if(request.method=="POST"):
+        delete = request.POST.get("delete")
+        
+        if(delete):
+            utilizador=request.user.utilizador
+            user=request.user
+            logout(request)
+            utilizador.delete()
+            user.delete()
+            return HttpResponseRedirect(reverse('movies:index'))   
+
+
+        username=request.POST['username']
+        img = request.FILES.get("image",None)
+        if((not username == "" )and (not username == request.user.username)):
+            request.user.username = username
+            request.user.save()
+        if(img):
+            request.user.utilizador.atualizar_imagem(img)
+        return render(request, 'movies/profile.html')
+
+
+    else:
+        return render(request, 'movies/profile.html')
 
 
 
