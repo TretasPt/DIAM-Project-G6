@@ -1,3 +1,5 @@
+import math
+
 from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
@@ -103,35 +105,54 @@ def createGroup(request):
 
 @login_required
 def group(request, group_id):
-    if request.method == 'POST':
-        message = request.POST.get('messageinput')
+    context = {}
+    utilizador = Utilizador.objects.get(user=request.user)
+    groups_list = Grupo.objects.filter(utilizadorgrupo__utilizador=utilizador)
+    if group_id == 0:
+        context['no_messages'] = True
     else:
-        context = {}
-        utilizador = Utilizador.objects.get(user=request.user)
-        groups_list = Grupo.objects.filter(utilizadorgrupo__utilizador=utilizador)
-        if group_id == 0:
-            context['no_messages'] = True
-        else:
-            group_name = Grupo.objects.get(pk=group_id).nome
-            messages_list = Mensagem.objects \
-                .filter(grupo_id=group_id) \
-                .order_by('timestamp')  # [:5]  TODO
-            context['group_name'] = group_name
-            context['group_id'] = group_id
-            context['messages_list'] = messages_list
-            context['group_id'] = group_id
-        context['groups_list'] = groups_list
-        return render(request, 'movies/group.html', context)
+        group_name = Grupo.objects.get(pk=group_id).nome
+        convite_por_aceitar_user = get_object_or_404(
+            UtilizadorGrupo,
+            utilizador=utilizador,
+            grupo_id=group_id
+        ).convite_por_aceitar_user
+        messages_list = Mensagem.objects \
+            .filter(grupo_id=group_id) \
+            .order_by('timestamp')
+        context['group_name'] = group_name
+        context['group_id'] = group_id
+        context['messages_list'] = messages_list
+        context['group_id'] = group_id
+        context['convite_por_aceitar_user'] = convite_por_aceitar_user
+    context['groups_list'] = groups_list
+    return render(request, 'movies/group.html', context)
+
+@login_required
+def userAcceptInvite(request, group_id):
+    utilizadorgrupo = get_object_or_404(
+        UtilizadorGrupo,
+        utilizador=request.user.utilizador,
+        grupo_id=group_id
+    )
+    utilizadorgrupo.accept_invitation()
+    return HttpResponseRedirect(reverse('movies:group', args=(group_id,)))
 
 @login_required
 def createPost(request):
     utilizador = Utilizador.objects.get(user=request.user)
     if request.method == 'POST':
+        permissao = ''
+        if request.POST['is_global'] == 'true':
+            permissao = 'T'
+        else:
+            permissao = 'G'
         publicacao = Publicacao(
             data_publicacao=timezone.now(),
             texto=request.POST['text'],
             utilizador=utilizador,
-            filme=Filme.objects.get(pk=request.POST['film_id'])
+            filme=Filme.objects.get(pk=request.POST['film_id']),
+            permissao=permissao
         )
         publicacao.save()
         for group_id in request.POST.getlist('groups[]'):
@@ -141,9 +162,9 @@ def createPost(request):
             )
             publicacaoGrupo.save()
         for cinema_id in request.POST.getlist('cinemas[]'):
-            publicacaoCinema = PublicacaoGrupo(
+            publicacaoCinema = PublicacaoCinema(
                 publicacao=publicacao,
-                grupo=Grupo.objects.get(pk=cinema_id)
+                cinema=Cinema.objects.get(pk=cinema_id)
             )
             publicacaoCinema.save()
         return HttpResponseRedirect(reverse('movies:index'))
@@ -163,7 +184,12 @@ def createPost(request):
 @require_POST
 def sendMessage(request):
     utilizador = Utilizador.objects.get(user=request.user)
-    group = Grupo.objects.get(pk=request.POST['group_id'])
+    utilizadorgrupo = get_object_or_404(
+        UtilizadorGrupo,
+        utilizador=utilizador,
+        grupo_id=request.POST['group_id']
+    )
+    group = utilizadorgrupo.grupo
     message_text = request.POST['message']
     message = Mensagem(
         sender=utilizador,
@@ -179,16 +205,50 @@ def sendMessage(request):
 
 @require_POST
 def receiveMessage(request):
-    #for i in request.POST.getlist('shown_messages_id_list[]'):
-    #    print('RECEIVED ---> ', i)
-    #print('')
+    utilizador = Utilizador.objects.get(user=request.user)
+    utilizadorgrupo = get_object_or_404(
+        UtilizadorGrupo,
+        utilizador=utilizador,
+        grupo_id=request.POST['group_id']
+    )
     messages_list = Mensagem.objects\
         .filter(grupo_id=request.POST['group_id'])\
         .exclude(id__in=request.POST.getlist('shown_messages_id_list[]'))
-    
+
     return JsonResponse({
         'messages_list': list(messages_list.values('id', 'texto','sender__imagem'))
     })
+
+@login_required(login_url=reverse_lazy('movies:loginUser'))
+def discovery(request):
+    cinemas_aderidos_list = Cinema.objects.filter(utilizadorcinema__utilizador=request.user.utilizador)
+    cinemas_nao_aderidos_list = Cinema.objects.exclude(utilizadorcinema__utilizador=request.user.utilizador)
+    return render(request, 'movies/discovery.html', {
+        'cinemas_aderidos_list': cinemas_aderidos_list,
+        'cinemas_nao_aderidos_list': cinemas_nao_aderidos_list
+    })
+
+@require_POST
+def searchCinema(request):
+    search_text = request.POST['cinema_name']
+    cinemas_aderidos_list = Cinema.objects.filter(utilizadorcinema__utilizador=request.user.utilizador)
+    cinemas_nao_aderidos_list = Cinema.objects\
+        .filter(nome__contains=search_text)\
+        .exclude(utilizadorcinema__utilizador=request.user.utilizador)
+    return render(request, 'movies/discovery.html', {
+        'cinemas_aderidos_list': cinemas_aderidos_list,
+        'cinemas_nao_aderidos_list': cinemas_nao_aderidos_list
+    })
+
+@require_POST #TODO e require login
+def adhereCinema(request):
+    cinema = Cinema.objects.get(pk=request.POST['cinema_id'])
+    utilizadorcinema = UtilizadorCinema(
+        utilizador=request.user.utilizador,
+        cinema=cinema
+    )
+    utilizadorcinema.save()
+    return HttpResponseRedirect(reverse('movies:discovery'))
 
 def getRecentGroupsList(user):
     recentgroups_list = Grupo.objects.filter(Utilizador.objects.get(
@@ -490,12 +550,6 @@ def userOptions(request, user_id):
         'user': user
     }
     return render(request, 'movies/userOptions.html', context)
-
-
-def logoutuser (request):
-    logout(request)
-    return HttpResponseRedirect(reverse('movies:index'))   
-
 
 @permission_required('movies.deleteUser', login_url=reverse_lazy('movies:loginuser'))
 def deleteUser (request, user_id):
