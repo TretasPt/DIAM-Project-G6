@@ -4,42 +4,63 @@
 
 {% block main_content %}
 <section class="scrollbox">
+    <h1>Filtrar username:</h1>
+    <form method="get">
+        <label>Username: <input type="search" name="search" value={{search}}></label>
+        <input type="submit" value="Pesquisar">
+    </form>
+    <br>
+    <!-- Members here -->
+    <h1>Membros:</h1>
+    {% if members %}
+    {% for member in members %}
+    <section class="postbox">
+        <section class="posttopic">
+
+            <section class="posttopictitle">
+                <h3 style="text-align: center;">
+                    {{ member.utilizador.user.username }}
+                </h3>
+            </section>
+            <section class="posttopicimage">
+                <img src="{% static member.utilizador.imagem %}" style="width: 100%;" />
+            </section>
+
+        </section>
+        <section class="postcontent">
+            <section class="posttext">
+                Verificado: {{ member.utilizador.verificado }}
+                <br>
+                Data de adesão: {{ member.utilizador.data_adesao }}
+                <br>
+                {% if admin  %}
+                <form method="post" action="{% url 'movies:inviteToGroup' group_id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Remover do grupo">
+
+                    {% if member.administrador %}
+                    <input type="submit" value="Remover administrador">
+                    {% else %}
+                    <input type="submit" value="Promover a administrador">
+                    {% endif %}
+                </form>
+                {% endif %}
+                <br>
+            </section>
+        </section>
+    </section>
+    {% endfor %}
+    {% endif %}
+
+    <h1>Users:</h1>
+
     {% if admin %}
     admin
     {%else%}
     not admin
     {% endif %}
     <br>
-    Filter will be here.
-    {% if users %}
-    {% for user in users %}
-    <section class="postbox">
-        <section class="posttopic">
 
-            <section class="posttopictitle">
-                <h3 style="text-align: center;">
-                    {{ user.user.username }}
-                </h3>
-            </section>
-            <section class="posttopicimage">
-                <img src="{% static user.user.utilizador.imagem %}" style="width: 100%;" />
-            </section>
-
-        </section>
-        <section class="postcontent">
-            <section class="posttext">
-                Verificado: {{ user.user.utilizador.verificado }}
-                <br>
-                Data de adesão: {{ user.user.utilizador.data_adesao }}
-                <br>
-                <form method="post" action="{% url 'movies:inviteToGroup' group_id %}">{% csrf_token %}<input type="submit" value="Convidar"></form>
-                <br>
-                {{user}}
-            </section>
-        </section>
-    </section>
-    {% endfor %}
-    {% endif %}
 </section>
 {% endblock %}
 

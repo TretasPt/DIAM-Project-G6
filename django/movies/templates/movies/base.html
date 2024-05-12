@@ -29,6 +29,7 @@
                 {% endif %}
                 {% if request.user.is_superuser %}
                 <a class="navbutton" href="{% url 'movies:databaseTest' %}"></a>
+                <a class="navbutton" href="http://localhost:3000/"></a>
                 {% endif %}
             </nav>
             {% block main %}

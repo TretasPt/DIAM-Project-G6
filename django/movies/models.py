@@ -176,6 +176,8 @@ class UtilizadorGrupo(models.Model):
         ug = UtilizadorGrupo(utilizador=utilizador,grupo=grupo,convite_por_aceitar_user=False)
         ug.save()
         return ug
+    def remove_user_from_group(self):
+        self.delete()
 
 class UtilizadorCinema(models.Model):
     utilizador = models.ForeignKey(Utilizador, models.CASCADE)

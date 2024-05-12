@@ -8,8 +8,9 @@ urlpatterns = [
     path("login", views.loginUser, name="loginUser"),
     path("logout", views.logoutUser, name="logoutUser"),
     path("creategroup", views.createGroup, name="createGroup"),
-    path("inviteToGroup/<int:group_id>", views.inviteToGroup, name="inviteToGroup"),
     path("group/<int:group_id>", views.group, name="group"),
+    path("inviteToGroup/<int:group_id>", views.inviteToGroup, name="inviteToGroup"),
+    # path(r'^inviteToGroup/(?P<username>\w{0,50})/$', views.inviteToGroup, name="inviteToGroup"),
  
     #Test
     path("test", views.databaseTest, name="databaseTest"),

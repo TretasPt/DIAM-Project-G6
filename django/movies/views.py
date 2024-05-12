@@ -132,19 +132,27 @@ def getRecentGroupsList(user):
 def inviteToGroup(request, group_id):
     context = {}
     if(request.method=="GET"):
+        search=request.GET.get("search","")
+        context['search']=search
         context['group_id'] = group_id
         utilizador = Utilizador.objects.get(user=request.user)
 
         context['groups_list'] = Grupo.objects.filter(utilizadorgrupo__utilizador=utilizador)
-        context['members'] = UtilizadorGrupo.objects.filter(grupo__id=group_id,convite_por_aceitar_user=False,convite_por_aceitar_grupo=False)
+        context['members'] = UtilizadorGrupo.objects.filter(grupo__id=group_id,convite_por_aceitar_user=False,convite_por_aceitar_grupo=False,utilizador__user__username__icontains=search)
 
         ug = UtilizadorGrupo.objects.filter(utilizador=utilizador,grupo__id=group_id).first()
         context['admin'] = ug.administrador if ug is not None else False
         
+        def add_ug_if_exists(utilizador):
+            ug = UtilizadorGrupo.objects.filter(utilizador=utilizador,grupo__id=group_id).first()
+            return {"utilizador":utilizador,"ug":ug}
+
         if(context['admin']):
-            context['users'] = Utilizador.objects.filter(user__username__icontains="tesa").filter(~Q(id__in=context['members'].values("utilizador")))[:25]
+            context['users'] = list(map(add_ug_if_exists,Utilizador.objects.filter(user__username__icontains=search).filter(~Q(id__in=context['members'].values("utilizador")))[:25]))
         return render(request, 'movies/inviteToGroup.html', context)
     elif(request.method=="POST"):
+        user_id=request.POST.get('user_id')
+        print(user_id)
         return render(request, 'movies/inviteToGroup.html', context)
     else:
         return HttpResponse("TODO" + " - Convidar para o grupo " + str(group_id) + "\nBAD METHOD: "+request.method)
