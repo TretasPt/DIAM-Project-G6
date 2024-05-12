@@ -22,6 +22,11 @@ urlpatterns = [
     path("inviteToGroup/<int:group_id>", views.inviteToGroup, name="inviteToGroup"),
     path("userAcceptInvite/<int:group_id>", views.userAcceptInvite, name="userAcceptInvite"),
  
+    path("listMovies", views.listMovies, name="listMovies"),
+    path('searchMovie', views.searchMovie, name="searchMovie"),
+    path("listMovies/<int:filme_id>", views.moviesOptions, name='moviesOptions'),
+    path('editMovie/<int:filme_id>', views.editMovie, name="editMovie"),
+
     #Test
     path("test", views.databaseTest, name="databaseTest"),
 
