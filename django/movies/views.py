@@ -185,8 +185,9 @@ def receiveMessage(request):
     messages_list = Mensagem.objects\
         .filter(grupo_id=request.POST['group_id'])\
         .exclude(id__in=request.POST.getlist('shown_messages_id_list[]'))
+    
     return JsonResponse({
-        'messages_list': list(messages_list.values('id', 'texto'))
+        'messages_list': list(messages_list.values('id', 'texto','sender__imagem'))
     })
 
 def getRecentGroupsList(user):

@@ -102,12 +102,15 @@ $(document).ready(function(event){
                     //alert(response.messages_list[key].id + response.messages_list[key].texto);
                     let message_id = response.messages_list[key].id;
                     let message_text = response.messages_list[key].texto;
+                    let message_imagem = "../../static/"+response.messages_list[key].sender__imagem;
                     let message = $('#message_template').clone();
                     message.removeAttr('id')
                     message.addClass('message')
                     message.attr('id', 'message_' + message_id)
                     message.removeClass('hiddensection')
                     message.children('.messagetext').append(message_text)
+                    message.children('.messageprofileimgcropper').children("img").attr("src",message_imagem)
+                    // alert(message.children('.messageprofileimgcropper').children("img").attr("src"))
                     $('#group_messages_body').append(message);
                 }
             }
