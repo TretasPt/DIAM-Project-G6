@@ -124,12 +124,14 @@ header {
 .socialbox {
     background-color: gainsboro;
     border-radius: 5px;
-    display: block;
+    display: flex;
     width: 85%;
     float: left;
     margin-left: 5%;
     margin-bottom: 2vh;
     overflow: hidden;
+    padding: 5%;
+    justify-content: space-around;
 }
 
 .groupbox {
@@ -156,6 +158,12 @@ header {
     display: block;
     margin-right: auto;
     margin-left: auto;
+}
+
+.userformcontainer {
+    width: 100%;
+    text-align: center;
+    color: grey;
 }
 
 .formfield {
@@ -326,11 +334,13 @@ header {
 }
 
 .createbox {
-    height: 10vh;
+    /* height: 10vh; */
 }
 
 .profileimg {
     width: inherit;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .profileimgcropper {
@@ -391,6 +401,20 @@ header {
     scrollbar-width: none;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #noaside {
     width: 7vw;
 }
@@ -407,6 +431,10 @@ header {
     margin-left: 1vw;
     font-size: 17px;
     font-weight: bold;
+}
+
+#creategroupbox {
+    /* height: 10vh; */
 }
 
 #dontknowbox {

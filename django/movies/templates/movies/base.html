@@ -15,15 +15,24 @@
             <nav class="personalpanel">
                 <header>
                     <section class="profileimgcropper">
-                        <img class="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>
+                        {% if request.user.is_authenticated %}
+                        <img class="profileimg" src="{% static request.user.utilizador.imagem %}"/>
+                        <!-- {{ request.user.utilizador.imagem }} -->
+                        {% else %}
+                        <img class="profileimg" src="{% static 'movies/images/NO_USER_IMAGE.png' %}"/>
+                        {% endif %}
                     </section>
                 </header>
                 <div id="navbuttonscropper">
                     <a class="navbutton" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/home.png' %}"></a>
                     {% if request.user.is_authenticated %}
-                    <a class="navbutton" href="{% url 'movies:group' 0 %}"></a>
+                    <a class="navbutton" href="{% url 'movies:group' 0 %}">Grupos</a>
                     <a class="navbutton" href="{% url 'movies:listUsers'%}"><img class="imgcropper" src="{% static 'movies/images/usersList.png' %}"></a>
                     <a class="navbutton" href="{% url 'movies:logoutuser' %}"><img class="imgcropper" src="{% static 'movies/images/logout.png' %}"></a>
+                    {% if request.user.is_superuser %}
+                    <a class="navbutton" href="{% url 'movies:databaseTest' %}">Test</a>
+                    <a class="navbutton" href="http://localhost:3000/">Mobile</a>
+                    {% endif %}
                     {%else%}
                     <a class="navbutton" href="{% url 'movies:registerUser' %}"><img class="imgcropper" src="{% static 'movies/images/register.png' %}"></a>
                     <a class="navbutton" href="{% url 'movies:loginUser' %}"><img class="imgcropper" src="{% static 'movies/images/login.png' %}"></a>

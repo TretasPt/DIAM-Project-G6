@@ -10,7 +10,7 @@
     <section id="group_messages_body">
         <section id="message_template" class="hiddensection">
             <section class="messageprofileimgcropper">
-                <img class="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>
+                <img class="profileimg" src="{% static 'movies/images/NO_USER_IMAGE.png' %}"/>
             </section>
             <section class="messagetext">
             </section>
@@ -18,7 +18,7 @@
         {% for message in messages_list %}
             <section id="message_{{ message.id }}" class="message">
                 <section class="messageprofileimgcropper">
-                    <img class="profileimg" src="{% static 'movies/images/noprofileimg.png' %}"/>
+                    <img class="profileimg" src="{% static message.sender.imagem %}"/>
                 </section>
                 <section class="messagetext">
                     {{ message.texto }}
@@ -35,7 +35,12 @@
 {% endblock %}
 
 {% block aside_content %}
-    <a id="creategroupbox" class="socialbox" href="{% url 'movies:createGroup' %}">Create Group</a>
+    <div class="socialbox">
+        <a id="creategroupbox"  href="{% url 'movies:createGroup' %}">Create Group</a>
+        {% if group_id %}
+        <a id="creategroupbox"  href="{% url 'movies:inviteToGroup' group_id %}">Membros</a>
+        {% endif %}
+    </div>
     {% if groups_list %}
         {% for group in groups_list %}
             <a class="socialbox groupbox" href="{% url 'movies:group' group.id %}">
