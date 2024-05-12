@@ -99,10 +99,9 @@ $(document).ready(function(event){
             },
             success: function (response) {
                 for (let key in response.messages_list) {
-                    //alert(response.messages_list[key].id + response.messages_list[key].texto);
                     let message_id = response.messages_list[key].id;
                     let message_text = response.messages_list[key].texto;
-                    let message_imagem = "../../static/"+response.messages_list[key].sender__imagem;
+                    let message_imagem = "/static/"+response.messages_list[key].sender__imagem;
                     let message = $('#message_template').clone();
                     message.removeAttr('id')
                     message.addClass('message')
@@ -110,7 +109,6 @@ $(document).ready(function(event){
                     message.removeClass('hiddensection')
                     message.children('.messagetext').append(message_text)
                     message.children('.messageprofileimgcropper').children("img").attr("src",message_imagem)
-                    // alert(message.children('.messageprofileimgcropper').children("img").attr("src"))
                     $('#group_messages_body').append(message);
                 }
             }
