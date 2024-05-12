@@ -164,6 +164,11 @@ class UtilizadorGrupo(models.Model):
         self.convite_por_aceitar_user=False
         self.date_joined=timezone.now()
         self.save()
+    def user_request_join_group(utilizador,grupo):#convite_por_aceitar_grupo=True,convite_por_aceitar_user=False
+        ug = UtilizadorGrupo(utilizador=utilizador,grupo=grupo,convite_por_aceitar_user=False)
+        ug.save()
+        return ug
+    
     def accept_join_request(self):
         self.convite_por_aceitar_grupo=False
         self.date_joined=timezone.now()
@@ -172,12 +177,15 @@ class UtilizadorGrupo(models.Model):
         ug = UtilizadorGrupo(utilizador=utilizador,grupo=grupo,convite_por_aceitar_grupo=False)
         ug.save()
         return ug
-    def user_request_join_group(utilizador,grupo):#convite_por_aceitar_grupo=True,convite_por_aceitar_user=False
-        ug = UtilizadorGrupo(utilizador=utilizador,grupo=grupo,convite_por_aceitar_user=False)
-        ug.save()
-        return ug
-    def remove_user_from_group(self):
+    
+    def remove_user(self):
         self.delete()
+    def promote(self):
+        self.administrador=True
+        self.save()
+    def unpromote(self):
+        self.administrador=False
+        self.save()
 
 class UtilizadorCinema(models.Model):
     utilizador = models.ForeignKey(Utilizador, models.CASCADE)

@@ -31,33 +31,78 @@
             <section class="posttext">
                 Verificado: {{ member.utilizador.verificado }}
                 <br>
-                Data de adesão: {{ member.utilizador.data_adesao }}
+                Criado: {{ member.utilizador.data_adesao }}
                 <br>
-                {% if admin  %}
-                <form method="post" action="{% url 'movies:inviteToGroup' group_id %}">
-                    {% csrf_token %}
-                    <input type="submit" value="Remover do grupo">
-
-                    {% if member.administrador %}
-                    <input type="submit" value="Remover administrador">
-                    {% else %}
-                    <input type="submit" value="Promover a administrador">
-                    {% endif %}
-                </form>
-                {% endif %}
-                <br>
+                Data de adesão: {{ member.date_joined }}
             </section>
+            {% if admin and not member.utilizador.user == request.user %}
+            <form method="post" action="{% url 'movies:inviteToGroup' group_id %}">
+                {% csrf_token %}
+                <input type="hidden" name="search" value={{search}}>
+                <input type="hidden" name="ug_id" value={{member.id}}>
+
+                <input type="submit" value="Remover do grupo" name="RemoveFromGroup">
+
+                {% if member.administrador %}
+                <input type="submit" value="Remover administrador" name="RemoveAdmin">
+                {% else %}
+                <input type="submit" value="Promover a administrador" name="AddAdmin">
+                {% endif %}
+            </form>
+            {% endif %}
         </section>
     </section>
     {% endfor %}
     {% endif %}
 
-    <h1>Users:</h1>
-
+    <!-- Users here -->
     {% if admin %}
-    admin
+    <h1>Users:</h1>
+    {% if users %}
+    {% for user in users %}
+    <section class="postbox">
+        <section class="posttopic">
+
+            <section class="posttopictitle">
+                <h3 style="text-align: center;">
+                    {{ user.utilizador.user.username }}
+                </h3>
+            </section>
+            <section class="posttopicimage">
+                <img src="{% static user.utilizador.imagem %}" style="width: 100%;" />
+            </section>
+
+        </section>
+        <section class="postcontent">
+            <section class="posttext">
+                Verificado: {{ user.utilizador.verificado }}
+                <br>
+                Criado: {{ user.utilizador.data_adesao }}
+            </section>
+            <br>
+            <form method="post" action="{% url 'movies:inviteToGroup' group_id %}">
+                {% csrf_token %}
+                <input type="hidden" name="search" value={{search}}>
+                <input type="hidden" name="utilizador_id" value={{user.utilizador.id}}>
+                <input type="hidden" name="ug_id" value={{user.ug.id}}>
+
+                {% if user.ug.convite_por_aceitar_user == 0 %}
+                <input type="submit" value="Aceitar entrada" name="AcceptJoin">
+                <input type="submit" value="Recusar entrada" name="RefuseJoin">
+                {% else %}
+                {% if user.ug.convite_por_aceitar_grupo == 0 %}
+                <input type="submit" value="Remover convite" name="RemoveInvite">
+                {% else %}
+                <input type="submit" value="Convidar" name="AddInvite">
+                {% endif %}
+                {% endif %}
+            </form>
+            <br>
+        </section>
+    </section>
+    {% endfor %}
+    {% endif %}
     {%else%}
-    not admin
     {% endif %}
     <br>
 

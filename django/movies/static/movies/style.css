@@ -78,12 +78,14 @@ header {
 .socialbox {
     background-color: gainsboro;
     border-radius: 5px;
-    display: block;
+    display: flex;
     width: 85%;
     float: left;
     margin-left: 5%;
     margin-bottom: 2vh;
     overflow: hidden;
+    padding: 5%;
+    justify-content: space-around;
 }
 
 .groupbox {
@@ -221,7 +223,7 @@ header {
 }
 
 #creategroupbox {
-    height: 10vh;
+    /* height: 10vh; */
 }
 
 #noaside {

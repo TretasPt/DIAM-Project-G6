@@ -151,9 +151,33 @@ def inviteToGroup(request, group_id):
             context['users'] = list(map(add_ug_if_exists,Utilizador.objects.filter(user__username__icontains=search).filter(~Q(id__in=context['members'].values("utilizador")))[:25]))
         return render(request, 'movies/inviteToGroup.html', context)
     elif(request.method=="POST"):
-        user_id=request.POST.get('user_id')
-        print(user_id)
-        return render(request, 'movies/inviteToGroup.html', context)
+        if(request.POST.get('RemoveAdmin')):
+            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+            ug.unpromote()
+        elif(request.POST.get('AddAdmin')):
+            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+            ug.promote()
+        elif(request.POST.get('RemoveFromGroup') or request.POST.get('RefuseJoin') or request.POST.get('RemoveInvite')):
+            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+            ug.remove_user()
+        elif(request.POST.get('AcceptJoin')):
+            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+            ug.accept_join_request()
+        elif(request.POST.get('AddInvite')):
+            u = Utilizador.objects.get(id=request.POST.get('utilizador_id'))
+            grupo = Grupo.objects.get(id=group_id)
+            UtilizadorGrupo.grupo_invite_user(grupo,u)
+        else:
+            print("Error. Empty form.")
+
+        # user_id=request.POST.get('user_id')
+        # context['search']=search
+        # print(user_id)
+        search=request.POST.get("search","")
+        print(search)
+        return HttpResponseRedirect(reverse('movies:inviteToGroup', args=(group_id,),) + "?search=" +search)
+        # return render(request, 'movies/inviteToGroup.html', context)
+
     else:
         return HttpResponse("TODO" + " - Convidar para o grupo " + str(group_id) + "\nBAD METHOD: "+request.method)
 

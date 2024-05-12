@@ -28,7 +28,7 @@
     <div class="socialbox">
         <a id="creategroupbox"  href="{% url 'movies:createGroup' %}">Create Group</a>
         {% if group_id %}
-        <a id="creategroupbox"  href="{% url 'movies:inviteToGroup' group_id %}">Convidar para o grupo</a>
+        <a id="creategroupbox"  href="{% url 'movies:inviteToGroup' group_id %}">Membros</a>
         {% endif %}
     </div>
     {% if groups_list %}
