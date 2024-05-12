@@ -10,7 +10,7 @@ class Utilizador(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     data_adesao = models.DateTimeField(auto_now_add=True)
     verificado = models.BooleanField(default=False)
-    imagem = models.CharField(max_length=200,default="NO_USER_IMAGE.png")
+    imagem = models.CharField(max_length=200,default="movies/images/NO_USER_IMAGE.png")
 
     def create(username,password=None,email=None,imagem=None):
         try:
@@ -46,7 +46,7 @@ class Filme(models.Model):
     genre = models.ForeignKey(Genre, models.SET_NULL, null=True)
     saga = models.ForeignKey(Saga, models.SET_NULL,blank=True,null=True)
     duracao = models.IntegerField()
-    imagem = models.CharField(max_length=200,default="NO_MOVIE_IMAGE.png")
+    imagem = models.CharField(max_length=200,default="movies/images/NO_MOVIE_IMAGE.png")
     data_publicacao = models.DateField()#Não precisa de ser DateTime porque não tem time.
 
     def create(nome,genre,saga,duracao,imagem,data_publicacao):
@@ -71,7 +71,7 @@ class Cinema(models.Model):
 class Grupo(models.Model):
     data_criacao = models.DateTimeField(auto_now_add=True)
     nome = models.CharField(max_length=100)
-    imagem = models.CharField(max_length=200,default="NO_GROUP_IMAGE.png")
+    imagem = models.CharField(max_length=200,default="movies/images/NO_GROUP_IMAGE.png")
     publico = models.BooleanField(default=False)
 
     def get_last_message(grupo):
@@ -165,6 +165,11 @@ class UtilizadorGrupo(models.Model):
         self.convite_por_aceitar_user=False
         self.date_joined=timezone.now()
         self.save()
+    def user_request_join_group(utilizador,grupo):#convite_por_aceitar_grupo=True,convite_por_aceitar_user=False
+        ug = UtilizadorGrupo(utilizador=utilizador,grupo=grupo,convite_por_aceitar_user=False)
+        ug.save()
+        return ug
+    
     def accept_join_request(self):
         self.convite_por_aceitar_grupo=False
         self.date_joined=timezone.now()
@@ -173,10 +178,15 @@ class UtilizadorGrupo(models.Model):
         ug = UtilizadorGrupo(utilizador=utilizador,grupo=grupo,convite_por_aceitar_grupo=False)
         ug.save()
         return ug
-    def user_request_join_group(utilizador,grupo):#convite_por_aceitar_grupo=True,convite_por_aceitar_user=False
-        ug = UtilizadorGrupo(utilizador=utilizador,grupo=grupo,convite_por_aceitar_user=False)
-        ug.save()
-        return ug
+    
+    def remove_user(self):
+        self.delete()
+    def promote(self):
+        self.administrador=True
+        self.save()
+    def unpromote(self):
+        self.administrador=False
+        self.save()
 
 class PublicacaoGrupo(models.Model):
     publicacao = models.ForeignKey(Publicacao, models.CASCADE)

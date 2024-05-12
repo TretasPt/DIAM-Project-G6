@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from django.urls import reverse_lazy
 from pathlib import Path
 #Used for static folder.
 import os
@@ -144,3 +145,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'movies/static/media')
 #Used for react connection.
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
+
+LOGIN_URL = 'movies.views.loginUser'
+LOGIN_URL = reverse_lazy('movies:loginUser')

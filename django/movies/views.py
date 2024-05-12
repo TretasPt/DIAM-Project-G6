@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
@@ -21,6 +21,8 @@ from django.contrib.auth.models import Permission
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.db.models import Q
+
 
 def index(request):
     publicacoes_list = Publicacao.objects.order_by('-data_publicacao')#[:5] #TODO
@@ -37,6 +39,7 @@ def index(request):
         'publicacoes_list': publicacoes_list
     })
 
+@login_required
 def registerUser(request):
     if request.method == 'POST':
         user = User.objects.create_user(
@@ -62,9 +65,9 @@ def loginUser(request):
         except KeyError:
             return render(request, 'movies/login.html')
         if user:
-            login(request, user)
-            print("TODO - set profile image") #TODO - set profile image
+            login(request,user)
             return HttpResponseRedirect(reverse('movies:index'))
+
         else:
             return render(request, 'movies/login.html', {
                 'error_message': 'Falha de login'
@@ -72,7 +75,12 @@ def loginUser(request):
     else:
         return render(request, 'movies/login.html')
 
-@login_required(login_url=reverse_lazy('movies:loginUser'))
+@login_required
+def logoutUser (request):
+    logout(request)
+    return HttpResponseRedirect(reverse('movies:index'))
+
+@login_required
 def createGroup(request):
     if request.method == 'POST':
         utilizador = Utilizador.objects.get(user=request.user)
@@ -93,7 +101,7 @@ def createGroup(request):
     else:
         return render(request, 'movies/createGroup.html')
 
-@login_required(login_url=reverse_lazy('movies:loginUser'))
+@login_required
 def group(request, group_id):
     if request.method == 'POST':
         message = request.POST.get('messageinput')
@@ -111,10 +119,11 @@ def group(request, group_id):
             context['group_name'] = group_name
             context['group_id'] = group_id
             context['messages_list'] = messages_list
+            context['group_id'] = group_id
         context['groups_list'] = groups_list
         return render(request, 'movies/group.html', context)
 
-@login_required(login_url=reverse_lazy('movies:loginUser'))
+@login_required
 def createPost(request):
     utilizador = Utilizador.objects.get(user=request.user)
     if request.method == 'POST':
@@ -176,18 +185,82 @@ def receiveMessage(request):
     messages_list = Mensagem.objects\
         .filter(grupo_id=request.POST['group_id'])\
         .exclude(id__in=request.POST.getlist('shown_messages_id_list[]'))
+    
     return JsonResponse({
-        'messages_list': list(messages_list.values('id', 'texto'))
+        'messages_list': list(messages_list.values('id', 'texto','sender__imagem'))
     })
 
+def getRecentGroupsList(user):
+    recentgroups_list = Grupo.objects.filter(Utilizador.objects.get(
+        user=user
+    )).order_by('last_message_timestamp')
+    return recentgroups_list
+
+@login_required
+def inviteToGroup(request, group_id):
+    context = {}
+    if(request.method=="GET"):
+        search=request.GET.get("search","")
+        context['search']=search
+        context['group_id'] = group_id
+        utilizador = Utilizador.objects.get(user=request.user)
+
+        context['groups_list'] = Grupo.objects.filter(utilizadorgrupo__utilizador=utilizador)
+        context['members'] = UtilizadorGrupo.objects.filter(grupo__id=group_id,convite_por_aceitar_user=False,convite_por_aceitar_grupo=False,utilizador__user__username__icontains=search)
+
+        ug = UtilizadorGrupo.objects.filter(utilizador=utilizador,grupo__id=group_id).first()
+        context['admin'] = ug.administrador if ug is not None else False
+        
+        def add_ug_if_exists(utilizador):
+            ug = UtilizadorGrupo.objects.filter(utilizador=utilizador,grupo__id=group_id).first()
+            return {"utilizador":utilizador,"ug":ug}
+
+        if(context['admin']):
+            context['users'] = list(map(add_ug_if_exists,Utilizador.objects.filter(user__username__icontains=search).filter(~Q(id__in=context['members'].values("utilizador")))[:25]))
+        return render(request, 'movies/inviteToGroup.html', context)
+    elif(request.method=="POST"):
+        if(request.POST.get('RemoveAdmin')):
+            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+            ug.unpromote()
+        elif(request.POST.get('AddAdmin')):
+            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+            ug.promote()
+        elif(request.POST.get('RemoveFromGroup') or request.POST.get('RefuseJoin') or request.POST.get('RemoveInvite')):
+            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+            ug.remove_user()
+        elif(request.POST.get('AcceptJoin')):
+            ug = UtilizadorGrupo.objects.get(id=request.POST.get('ug_id'))
+            ug.accept_join_request()
+        elif(request.POST.get('AddInvite')):
+            u = Utilizador.objects.get(id=request.POST.get('utilizador_id'))
+            grupo = Grupo.objects.get(id=group_id)
+            UtilizadorGrupo.grupo_invite_user(grupo,u)
+        else:
+            print("Error. Empty form.")
+
+        search=request.POST.get("search","")
+        print(search)
+        return HttpResponseRedirect(reverse('movies:inviteToGroup', args=(group_id,),) + "?search=" +search)
+
+    else:
+        return HttpResponse("TODO" + " - Convidar para o grupo " + str(group_id) + "\nBAD METHOD: "+request.method)
+
+
+
+
+
+
+@login_required
 def databaseTest(request):
     output = "<h1>DATABASE DUMP</h1>\n<ul>\n"
+
+    output += "<a href='/movies'>Go to the site</a>\n\n"
 
     output += "<li>Utilizador<ul>\n"
     for user in Utilizador.objects.all():
         output+= "<li> <ul> <li>Username:"+user.user.username+"</li>\n"
         output+= "<li>Email:" + user.user.email + "</li>\n"
-        output+= "<li>Imagem: <a href='"  + user.imagem + "'>"+user.imagem+"</a> </li>\n"
+        output+= "<li>Imagem: <a href='"  +"http://localhost:8000/static/" + user.imagem + "'>"+user.imagem+"</a> </li>\n"
         output+= "<li>Verificado:" + str(user.verificado) + "</li>\n"
         output+= "<li>Data de adesão:" + str(user.data_adesao)+"</li></ul></li>\n"
     output +="</ul></li>\n"
@@ -208,7 +281,7 @@ def databaseTest(request):
         output+= "<li>Genero:" + (filme.genre.nome if filme.genre else "Não definido") + "</li>\n"
         output+= "<li>Saga:" + (filme.saga.nome if filme.saga else "Não definido") + "</li>\n"
         output+= "<li>Duracao:" + str(filme.duracao) + "</li>\n"
-        output+= "<li>Imagem: <a href='" + filme.imagem + "'>"+filme.imagem+"</a> </li>\n"
+        output+= "<li>Imagem: <a href='" +"http://localhost:8000/static/"+ filme.imagem + "'>"+filme.imagem+"</a> </li>\n"
         output+= "<li>Data de publicacao:" + str(filme.data_publicacao)+"</li></ul></li>\n"
     output +="</ul></li>\n"
 
@@ -223,7 +296,7 @@ def databaseTest(request):
         output+= "<li> <ul> <li>Nome:"+grupo.nome+"</li>\n"
         output+= "<li>Data de criação:" + str(grupo.data_criacao) + "</li>\n"
         output+= "<li>É publico:" + str(grupo.publico) + "</li>\n"
-        output+= "<li>Imagem: <a href='" + grupo.imagem + "'>"+grupo.imagem+"</a> </li></ul></li>\n"
+        output+= "<li>Imagem: <a href='"+"http://localhost:8000/static/" + grupo.imagem + "'>"+grupo.imagem+"</a> </li></ul></li>\n"
 
     output +="</ul></li>\n"
 
