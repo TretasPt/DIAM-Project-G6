@@ -42,7 +42,9 @@ $(document).ready(function(event){
         global = !global;
     })
 
-    $('form#postform').submit(function(event) {
+    $('form#post_form').submit(function(event) {
+        let groups_cinemas = 0
+        let film = 0
         $('.click.group').each(function () {
             let group_id_text = $(this).attr('id');
             let group_id = parseInt(group_id_text.replace('group_',''));
@@ -52,6 +54,7 @@ $(document).ready(function(event){
             input.setAttribute('type', 'number');
             input.setAttribute('hidden', 'hidden');
             $('form').append(input);
+            groups_cinemas++;
         });
         $('.click.cinema').each(function () {
             let cinema_id_text = $(this).attr('id');
@@ -62,57 +65,26 @@ $(document).ready(function(event){
             input.setAttribute('type', 'number');
             input.setAttribute('hidden', 'hidden');
             $('form').append(input);
+            groups_cinemas++
         });
+        $('.click.film').each(function () {
+            let film_id_text = $(this).attr('id');
+            let film_id = parseInt(film_id_text.replace('film_',''));
+            let input = document.createElement('input');
+            input.setAttribute('name', 'film_id');
+            input.setAttribute('value', film_id.toString());
+            input.setAttribute('type', 'number');
+            input.setAttribute('hidden', 'hidden');
+            $('form').append(input);
+            film++;
+        });
+        if (groups_cinemas === 0) {
+            event.preventDefault();
+            alert('Sem selecionar grupos ou cinemas a sua publicação não será visível')
+        }
+         else if (film === 0) {
+            event.preventDefault();
+            alert('Escolha um filme para a sua publicação')
+        }
     });
-
-    $('form#messageform').submit(function (event) {
-        event.preventDefault();
-        $.ajax({
-            type:'POST',
-            url:'/sendmessage',
-            data:{
-                group_id:$('#group_id').val(),
-                message:$('#message_input').val(),
-                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                func();
-            }
-        });
-        $('#message_input').val('');
-    });
-
-    function func () {
-        let shown_messages_id_list = []
-        $('.message').each(function () {
-            let message_id_text = $(this).attr('id');
-            let message_id = parseInt(message_id_text.replace('message_',''));
-            shown_messages_id_list.push(message_id)
-        });
-        $.ajax({
-            type: 'POST',
-            url: '../receivemessage',
-            data:{
-                group_id:$('#group_id').val(),
-                shown_messages_id_list:shown_messages_id_list,
-                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                for (let key in response.messages_list) {
-                    //alert(response.messages_list[key].id + response.messages_list[key].texto);
-                    let message_id = response.messages_list[key].id;
-                    let message_text = response.messages_list[key].texto;
-                    let message = $('#message_template').clone();
-                    message.removeAttr('id')
-                    message.addClass('message')
-                    message.attr('id', 'message_' + message_id)
-                    message.removeClass('hiddensection')
-                    message.children('.messagetext').append(message_text)
-                    $('#group_messages_body').append(message);
-                }
-            }
-        });
-    }
-
-    setInterval(func, 1000);
 });

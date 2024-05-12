@@ -1,0 +1,49 @@
+{% extends 'movies/layout1.html' %}
+
+{% load static %}
+
+{% block script %}
+    <script>
+        let number_of_pages = {{ number_of_pages }};
+        let current_page_number = 0;
+        let current_page_cinema_list = {{ films_list }}
+    </script>
+    <script src="{% static 'movies/scripts/discovery.js' %}"></script>
+{% endblock %}
+
+{% block main_content %}
+    <form id="cinema_search_form" method="POST" action="{% url 'movies:searchCinema' %}">
+        {% csrf_token %}
+        <section id="cinema_search_input_section">
+            <input id="cinema_search_input" name="cinema_name" type="text" placeholder="Pesquisar Cinema">
+            <input type="submit" value="Pesquisar"/>
+        </section>
+    </form>
+    <section id="cinemas_nao_aderidos">
+        {% for cinema in cinemas_nao_aderidos_list %}
+            <form id="cinema_{{ cinema_id }}" class="cinema" method="post" action="{% url 'movies:adhereCinema' %}">
+                {% csrf_token %}
+                <section class="cinema_aderir_name">
+                    {{ cinema.nome }}
+                </section>
+                <section class="cinema_aderir_input">
+                    <input type="number" name="cinema_id" value="{{ cinema.id }}" hidden="hidden"/>
+                    <input type="submit" value="Aderir"/>
+                </section>
+            </form>
+        {% endfor %}
+    </section>
+{% endblock %}
+
+{% block aside_content %}
+    {% if user.is_authenticated %}
+        <section id="dontknowbox" class="socialbox cinemas_aderidos">
+            <h2>Cinemas Aderidos</h2>
+            <ul>
+                {% for cinema in cinemas_aderidos_list %}
+                    <li><a>{{ cinema.nome }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+{% endblock %}

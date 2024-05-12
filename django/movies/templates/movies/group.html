@@ -2,6 +2,10 @@
 
 {% load static %}
 
+{% block script %}
+    <script src="{% static 'movies/scripts/mensagens.js' %}"></script>
+{% endblock %}
+
 {% block main_content %}
     <section id="group_messages_body">
         <section id="message_template" class="hiddensection">
@@ -22,11 +26,9 @@
             </section>
         {% endfor %}
     </section>
-    <section class="diaphragm">
-    </section>
-    <form id="messageform">
+    <form id="message_form">
         {% csrf_token %}
-        <input id="message_input" name="message_input"/>
+        <input id="message_input" name="message_input" type="text"/>
         <input id="group_id" name="group_id" type="number" value="{{ group_id }}" hidden="hidden"/>
         <input type="submit" hidden="hidden"/>
     </form>

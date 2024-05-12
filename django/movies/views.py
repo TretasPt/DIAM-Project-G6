@@ -1,3 +1,5 @@
+import math
+
 from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
@@ -132,9 +134,9 @@ def createPost(request):
             )
             publicacaoGrupo.save()
         for cinema_id in request.POST.getlist('cinemas[]'):
-            publicacaoCinema = PublicacaoGrupo(
+            publicacaoCinema = PublicacaoCinema(
                 publicacao=publicacao,
-                grupo=Grupo.objects.get(pk=cinema_id)
+                cinema=Cinema.objects.get(pk=cinema_id)
             )
             publicacaoCinema.save()
         return HttpResponseRedirect(reverse('movies:index'))
@@ -175,10 +177,41 @@ def receiveMessage(request):
     #print('')
     messages_list = Mensagem.objects\
         .filter(grupo_id=request.POST['group_id'])\
-        .exclude(id__in=request.POST.getlist('shown_messages_id_list[]'))
+        .exclude(id__in=request.POST.getlist('shown_messages_id_list[]')).values('sender__imagem')
     return JsonResponse({
         'messages_list': list(messages_list.values('id', 'texto'))
     })
+
+@login_required(login_url=reverse_lazy('movies:loginUser'))
+def discovery(request):
+    cinemas_aderidos_list = Cinema.objects.filter(utilizadorcinema__utilizador=request.user.utilizador)
+    cinemas_nao_aderidos_list = Cinema.objects.exclude(utilizadorcinema__utilizador=request.user.utilizador)
+    return render(request, 'movies/discovery.html', {
+        'cinemas_aderidos_list': cinemas_aderidos_list,
+        'cinemas_nao_aderidos_list': cinemas_nao_aderidos_list
+    })
+
+@require_POST
+def searchCinema(request):
+    search_text = request.POST['cinema_name']
+    cinemas_aderidos_list = Cinema.objects.filter(utilizadorcinema__utilizador=request.user.utilizador)
+    cinemas_nao_aderidos_list = Cinema.objects\
+        .filter(nome__contains=search_text)\
+        .exclude(utilizadorcinema__utilizador=request.user.utilizador)
+    return render(request, 'movies/discovery.html', {
+        'cinemas_aderidos_list': cinemas_aderidos_list,
+        'cinemas_nao_aderidos_list': cinemas_nao_aderidos_list
+    })
+
+@require_POST #TODO e require login
+def adhereCinema(request):
+    cinema = Cinema.objects.get(pk=request.POST['cinema_id'])
+    utilizadorcinema = UtilizadorCinema(
+        utilizador=request.user.utilizador,
+        cinema=cinema
+    )
+    utilizadorcinema.save()
+    return HttpResponseRedirect(reverse('movies:discovery'))
 
 def databaseTest(request):
     output = "<h1>DATABASE DUMP</h1>\n<ul>\n"
@@ -421,8 +454,7 @@ def userOptions(request, user_id):
 
 def logoutuser (request):
     logout(request)
-    return HttpResponseRedirect(reverse('movies:index'))   
-
+    return HttpResponseRedirect(reverse('movies:index'))
 
 @permission_required('movies.deleteUser', login_url=reverse_lazy('movies:loginuser'))
 def deleteUser (request, user_id):
