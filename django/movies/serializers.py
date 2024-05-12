@@ -4,7 +4,7 @@ from .models import Evento,EscolhaFilme,Voto,Grupo,Saga,Genre,Filme
 class GrupoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grupo
-        fields = ('pk', 'data_criacao','nome','imagem')
+        fields = ('pk', 'data_criacao','nome','imagem','publico')
 
 class EventoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,8 +20,6 @@ class VotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Voto
         fields = ('pk','utilizador','voto')
-
-
 
 class SagaSerializer(serializers.ModelSerializer):
     class Meta:
