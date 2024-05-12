@@ -459,3 +459,18 @@ def editUser (request, user_id):
         utilizador.save()
         
     return HttpResponseRedirect(reverse('movies:index'))  
+
+@login_required(login_url=reverse_lazy('movies:loginUser'))
+def listMovies(request):
+    movies_list = Filme.objects.order_by('nome')[:5]
+    context = {
+        'movies_list': movies_list
+    }
+    return render(request, 'movies/listMovies.html', context)
+
+
+def searchMovie(request):
+    if request.method == 'POST':
+        movie = request.POST.get('movieName')  
+
+    return HttpResponseRedirect(reverse('movies:moviesPage'))  

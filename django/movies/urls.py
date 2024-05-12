@@ -11,11 +11,13 @@ urlpatterns = [
     path("sendmessage", views.sendMessage, name="sendMessage"),
     path("receivemessage", views.receiveMessage, name="receiveMessage"),
     path("<int:group_id>/group", views.group, name="group"),
+    path("listMovies", views.listMovies, name="listMovies"),
     path("listUsers", views.listUsers, name="listUsers"),
     path("listUsers/<int:user_id>", views.userOptions, name='userOptions'),
     path('index', views.logoutuser, name='logoutuser'),
     path('<int:user_id>/deleteUser', views.deleteUser, name="deleteUser"),
     path('<int:user_id>/editUser', views.editUser, name="editUser"),
+    path('searchMovie', views.searchMovie, name="searchMovie"),
  
     #Test
     path("test", views.databaseTest, name="databaseTest"),

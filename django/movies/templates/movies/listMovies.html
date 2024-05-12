@@ -1,0 +1,50 @@
+{% extends 'movies/layout1.html' %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>    
+    {% block main_content %}
+        <section class="scrollbox">
+            {% if publicacoes_list %}
+                {% for publicacao in publicacoes_list %}
+                    <section class="postbox">
+                        <section class="posttopic">
+                            .
+                            <section class="posttopicimage"></section>
+                            <section class="posttopictitle"></section>
+                        </section>
+                        <section class="postcontent">
+                            <section class="posttext">
+                                {{ publicacao.texto }}
+                            </section>
+                        </section>
+                    </section>
+                {% endfor %}
+            {% endif %}
+        </section>
+    {% endblock %}
+    
+    {% block controls_content %}
+        {% if user.is_authenticated %}
+        <form action="{% url 'movies:searchMovie'%}" method="post">
+            {% csrf_token %}
+            <section>
+                <br><label for="movieName">Search:<input type="text" name="movieName" id="movieName"> </label>
+             </section>
+             <button type="submit" value=""><img class="control_icon" src="{% static 'movies/images/lupa.png' %}" alt="Submit"></button> 
+        </form>
+        
+        {% if movies_list %}
+            {% for filme in movies_list %}
+            <li>
+                <a href="{% url 'movies:userOptions' user.id %}">{{ filme.nome }}</a>
+            </li>
+            {% endfor %}
+        {% else %}
+        <p>Nao ha filmes disponiveis.</p>
+        {% endif %}
+
+        {% endif %}
+    {% endblock %}
+</html>
