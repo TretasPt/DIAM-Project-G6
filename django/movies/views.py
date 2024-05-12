@@ -92,7 +92,8 @@ def createGroup(request):
             utilizador=utilizador,
             grupo=grupo,
             administrador=True,
-            convite_por_aceitar=False,
+            convite_por_aceitar_user=False,
+            convite_por_aceitar_grupo=False,
             date_joined=timezone.now()
         )
         grupo.save()
