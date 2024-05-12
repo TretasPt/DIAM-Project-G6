@@ -55,7 +55,7 @@ function Autentication({ username, setUsername, isAutenticated, setIsAutenticate
                     <span style={{ fontWeight: "bold" }}>Username: </span>
                     {username}
                 </div>
-                <img alt="No Profile Picture" src={IMAGES_PATH+img}width={"10%"}/>
+                <img alt="Not found" src={IMAGES_PATH+img}width={"10%"}/>
                 <button onClick={handleLogout}>Logout</button>
             </div>
         )
