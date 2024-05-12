@@ -1,0 +1,41 @@
+{% extends 'movies/userform.html' %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+    
+{% block main %}
+<div class="alignCenter">
+    <h1 style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Selected: {{ filme.nome }}</h1>
+    
+    <body>  
+        <form action="{% url 'movies:editMovie' filme.id %}" method="post">
+            {% csrf_token %}
+            <section>
+                <section>
+                <div class="movieContainer">
+                    {%if filme.imagem %}
+                        <a class="moviePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{{ filme.imagem }}"></a>
+                    {%else%}
+                        <a class="profilePicInfo" href="{% url 'movies:index' %}"><img class="imgcropper" src="{% static 'movies/images/NO_USER_IMAGE.png' %}"></a>
+                    {%endif%}
+                    <div class="movieTextInfo">
+                        <p>Movie: {{ filme.nome }}</p>
+                        <p>Gender: {{filme.genre.nome}}</p>
+                        {%if filme.saga != null%}
+                            <p>Saga: {{filme.saga.nome}}</p>
+                        {%endif%}
+                        <p>Duration: {{filme.duracao}}</p>
+                        <p>Release Date: {{filme.data_publicacao}}</p>
+                    </div>
+                </div>
+                </section>
+            </section>
+        </form>
+    </body>
+</div>
+{% endblock %}
+
+</html>

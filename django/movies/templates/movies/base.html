@@ -30,8 +30,8 @@
                     <a class="navbutton" href="{% url 'movies:listUsers'%}"><img class="imgcropper" src="{% static 'movies/images/usersList.png' %}"></a>
                     <a class="navbutton" href="{% url 'movies:logoutuser' %}"><img class="imgcropper" src="{% static 'movies/images/logout.png' %}"></a>
                     {% if request.user.is_superuser %}
-                    <a class="navbutton" href="{% url 'movies:databaseTest' %}">Test</a>
-                    <a class="navbutton" href="http://localhost:3000/">Mobile</a>
+                    <a class="navbutton" href="{% url 'movies:databaseTest' %}"><img class="imgcropper" src="{% static 'movies/images/test.png' %}"></a>
+                    <a class="navbutton" href="http://localhost:3000/"><img class="imgcropper" src="{% static 'movies/images/mobile.png' %}"></a>
                     {% endif %}
                     {%else%}
                     <a class="navbutton" href="{% url 'movies:registerUser' %}"><img class="imgcropper" src="{% static 'movies/images/register.png' %}"></a>

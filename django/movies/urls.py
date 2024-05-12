@@ -20,7 +20,9 @@ urlpatterns = [
     path('<int:user_id>/deleteUser', views.deleteUser, name="deleteUser"),
     path('<int:user_id>/editUser', views.editUser, name="editUser"),
     path('searchMovie', views.searchMovie, name="searchMovie"),
- 
+    path("listMovies/<int:filme_id>", views.moviesOptions, name='moviesOptions'),
+    path('<int:filme_id>/editMovie', views.editMovie, name="editMovie"),
+
     #Test
     path("test", views.databaseTest, name="databaseTest"),
 

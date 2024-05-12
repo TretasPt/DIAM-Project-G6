@@ -6,26 +6,64 @@
 <html>    
     {% block main_content %}
         <section class="scrollbox">
-            {% if publicacoes_list %}
-                {% for publicacao in publicacoes_list %}
-                    <section class="postbox">
-                        <section class="posttopic">
-                            .
-                            <section class="posttopicimage"></section>
-                            <section class="posttopictitle"></section>
-                        </section>
-                        <section class="postcontent">
-                            <section class="posttext">
-                                {{ publicacao.texto }}
+            {% if movies_list %}
+                {% for movie in movies_list %}
+                    {% for filme1 in watched_list%}
+                    {%if filme1.filme == movie%}
+                        <section class="postbox">
+                            <section class="posttopic">
+                                <img class="moviePic" src="{{ movie.imagem }}"> 
+                                <section class="posttopicimage"></section>
+                                <section class="posttopictitle"></section>
+                            </section>
+                            <section class="movieText">
+                                <section class="posttext">
+                                    <p>Movie: {{ movie.nome }}</p>
+                                    <p>Gender: {{movie.genre.nome}}</p>
+                                    {%if movie.saga != null%}
+                                        <p>Saga: {{movie.saga.nome}}</p>
+                                    {%endif%}
+                                    <p>Duration: {{movie.duracao}}</p>
+                                    <p>Release Date: {{movie.data_publicacao}}</p>
+                                    <p>Watched: ✔</p>
+                                </section>
                             </section>
                         </section>
-                    </section>
+                    {%endif%}
+                    {% endfor %}
+                    {% for filme2 in toSee_list%}
+                    {%if filme2.filme == movie%}
+                        <section class="postbox">
+                            <section class="posttopic">
+                                <img class="moviePic" src="{{ movie.imagem }}">
+                                <section class="posttopicimage"></section>
+                                <section class="posttopictitle"></section>
+                            </section>
+                            <section class="movieText">
+                                <section class="posttext">
+                                    <p>Movie: {{ movie.nome }}</p>
+                                    <p>Gender: {{movie.genre.nome}}</p>
+                                    {%if movie.saga != null%}
+                                        <p>Saga: {{movie.saga.nome}}</p>
+                                    {%endif%}
+                                    <p>Duration: {{movie.duracao}}</p>
+                                    <p>Release Date: {{movie.data_publicacao}}</p>
+                                    <p>To See: ✔</p>
+                                </section>
+                            </section>
+                        </section>
+                    {%endif%}
+                    {% endfor %}
                 {% endfor %}
             {% endif %}
         </section>
     {% endblock %}
     
+
+
+
     {% block controls_content %}
+        <div class="moviesSearch">
         {% if user.is_authenticated %}
         <form action="{% url 'movies:searchMovie'%}" method="post">
             {% csrf_token %}
@@ -38,7 +76,7 @@
         {% if movies_list %}
             {% for filme in movies_list %}
             <li>
-                <a href="{% url 'movies:userOptions' user.id %}">{{ filme.nome }}</a>
+                <a href="{% url 'movies:moviesOptions' filme.id %}">{{ filme.nome }}</a>
             </li>
             {% endfor %}
         {% else %}
@@ -46,5 +84,6 @@
         {% endif %}
 
         {% endif %}
+        </div>
     {% endblock %}
 </html>

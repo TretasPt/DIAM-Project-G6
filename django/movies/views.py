@@ -39,7 +39,7 @@ def index(request):
         'publicacoes_list': publicacoes_list
     })
 
-@login_required
+
 def registerUser(request):
     if request.method == 'POST':
         user = User.objects.create_user(
@@ -536,9 +536,21 @@ def editUser (request, user_id):
 @login_required(login_url=reverse_lazy('movies:loginUser'))
 def listMovies(request):
     movies_list = Filme.objects.order_by('nome')[:5]
+
+    user_watched = ListaFilmes.objects.filter(utilizador = request.user.utilizador, tipo = ListaFilmes.Tipo.VISTOS).first()
+
+    user_toSee = ListaFilmes.objects.filter(utilizador = request.user.utilizador, tipo = ListaFilmes.Tipo.FUTUROS).first()
+
+    watched_list = ElementoLista.objects.filter(lista = user_watched)
+
+    toSee_list = ElementoLista.objects.filter(lista = user_toSee)
+
     context = {
-        'movies_list': movies_list
+        'movies_list': movies_list,
+        'watched_list': watched_list,
+        'toSee_list': toSee_list
     }
+
     return render(request, 'movies/listMovies.html', context)
 
 
@@ -547,3 +559,29 @@ def searchMovie(request):
         movie = request.POST.get('movieName')  
 
     return HttpResponseRedirect(reverse('movies:moviesPage'))  
+
+
+def moviesOptions(request, filme_id):
+    filme = get_object_or_404(Filme, pk=filme_id)
+    context = {
+        'filme':filme
+    }
+    return render(request, 'movies/moviesOptions.html', context)
+
+
+def editMovie (request, filme_id):
+    filme = get_object_or_404(Filme, pk=filme_id)
+
+    if request.method == 'POST':
+        new_lista_id = request.POST.get('watched')
+        
+        print(new_verified)
+        if(new_verified == "on"):
+            utilizador.verificado = True
+        elif (new_verified == None):
+            utilizador.verificado = False
+        else: False
+
+        filme.save()
+        
+    return HttpResponseRedirect(reverse('movies:index'))  
